@@ -18,11 +18,14 @@ export default function Navbar({ user, isDarkMode, toggleTheme }: NavbarProps) {
             whileHover={{ scale: 1.1, rotate: 10 }}
             className="w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center shadow-xl shadow-brand-primary/25 border border-white/20"
           >
+            {/* এখানে আপনি পরে লোগো ইমেজ বসাতে পারবেন */}
             <span className="text-white font-black text-3xl">B</span>
           </motion.div>
           <div className="flex flex-col -space-y-1">
-            <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">BioSnap</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 ml-0.5">Home</span>
+            <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">
+              BioSnap
+            </span>
+            {/* 'Home' লেখাটি এখান থেকে রিমুভ করা হয়েছে */}
           </div>
         </a>
 
