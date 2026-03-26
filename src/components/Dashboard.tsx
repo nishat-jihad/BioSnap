@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plus, FolderPlus, FileText, Code } from 'lucide-react';
 import LinkRow from './LinkRow';
 import PlaylistRow from './PlaylistRow';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 interface DashboardProps {
@@ -27,16 +27,7 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     e.preventDefault();
     let finalUrl = newLink.url.trim();
     if (finalUrl && !/^https?:\/\//i.test(finalUrl)) finalUrl = `https://${finalUrl}`;
-
-    const link: LinkItem = {
-      id: crypto.randomUUID(),
-      title: newLink.title,
-      subtitle: newLink.subtitle,
-      url: finalUrl,
-      color: '#18181b',
-      pinned: false
-    };
-
+    const link: LinkItem = { id: crypto.randomUUID(), title: newLink.title, subtitle: newLink.subtitle, url: finalUrl, color: '#18181b', pinned: false };
     const userDocRef = doc(db, 'users', user.uid);
     await updateDoc(userDocRef, { links: [...profile.links, link] });
     setIsAddingLink(false);
@@ -52,21 +43,17 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     setNewPlaylistName('');
   };
 
-  // FULL CORRECTED EXPORT PDF FUNCTION
   const exportPDF = async () => {
     if (!dashboardRef.current) return;
-    
     const exportActions = document.getElementById('export-actions');
     
     try {
-      // বাটনগুলো হাইড করা যাতে পিডিএফে না আসে
-      if (exportActions) exportActions.style.display = 'none';
+      if (exportActions) exportActions.style.visibility = 'hidden';
 
       const canvas = await html2canvas(dashboardRef.current, {
         scale: 2,
         useCORS: true,
         backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#fafafa',
-        logging: false
       });
 
       const imgData = canvas.toDataURL('image/png');
@@ -78,10 +65,9 @@ export default function Dashboard({ user, profile }: DashboardProps) {
       pdf.save(`${profile.username}-biosnap.pdf`);
 
     } catch (error) {
-      console.error("PDF Export Error:", error);
+      console.error("PDF Export failed:", error);
     } finally {
-      // কাজ শেষ হোক বা এরর আসুক—বাটনগুলো অবশ্যই ফিরিয়ে আনা হবে
-      if (exportActions) exportActions.style.display = 'flex';
+      if (exportActions) exportActions.style.visibility = 'visible';
     }
   };
 
@@ -89,10 +75,7 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     const htmlContent = `<!DOCTYPE html><html><head><title>${profile.fullName}</title><script src="https://cdn.tailwindcss.com"></script></head><body class="p-10 bg-zinc-50 font-sans"><h1 class="text-3xl font-bold">${profile.fullName}</h1><p class="text-zinc-500 mb-8">@${profile.username}</p><div class="space-y-4">${profile.links.map(l => `<div class="p-4 bg-white rounded-xl shadow-sm border-l-4" style="border-color: ${l.color}"><h3 class="font-bold">${l.title}</h3><p class="text-sm text-zinc-500">${l.subtitle}</p><a href="${l.url}" class="text-blue-500 text-xs">${l.url}</a></div>`).join('')}</div></body></html>`;
     const blob = new Blob([htmlContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${profile.username}-profile.html`;
-    a.click();
+    const a = document.createElement('a'); a.href = url; a.download = `${profile.username}.html`; a.click();
   };
 
   return (
@@ -105,12 +88,10 @@ export default function Dashboard({ user, profile }: DashboardProps) {
         
         <div id="export-actions" className="flex items-center gap-2">
           <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all">
-            <FileText size={16} className="text-red-500" />
-            Export as PDF
+            <FileText size={16} className="text-red-500" /> Export as PDF
           </button>
           <button onClick={exportHTML} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all">
-            <Code size={16} className="text-blue-500" />
-            Export as HTML
+            <Code size={16} className="text-blue-500" /> Export as HTML
           </button>
         </div>
       </div>
@@ -131,7 +112,7 @@ export default function Dashboard({ user, profile }: DashboardProps) {
               <input type="text" placeholder="Title" value={newLink.title} onChange={e => setNewLink({ ...newLink, title: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
               <input type="text" placeholder="Subtitle" value={newLink.subtitle} onChange={e => setNewLink({ ...newLink, subtitle: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" />
             </div>
-            <input type="text" placeholder="URL (e.g. google.com)" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
+            <input type="text" placeholder="URL" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setIsAddingLink(false)} className="px-4 py-2 text-zinc-400">Cancel</button>
               <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Link</button>
@@ -141,13 +122,6 @@ export default function Dashboard({ user, profile }: DashboardProps) {
       </AnimatePresence>
 
       <div className="space-y-8">
-        {profile.links.some(l => l.pinned) && (
-          <div className="space-y-4">
-            <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">Pinned Links</h2>
-            {profile.links.filter(l => l.pinned).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
-          </div>
-        )}
-
         <div className="space-y-6">
           <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
           {profile.links.filter(l => !l.pinned && !l.playlistId).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
