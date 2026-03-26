@@ -1,137 +1,155 @@
+Skip to main content
+We have updated our Terms of Service
+
+BioSnap
+Gemini
+Gemini 3 Flash Preview
+Ran for 7s
+description
+Read file
+lightbulb
+Thought for 5 seconds
+"Contact Us" লিঙ্কে ক্লিক করলে Chrome-এ যেতে বলার কারণ হলো এটি একটি mailto: লিঙ্ক।
+এর মানে হলো, যখন আপনি এটিতে ক্লিক করেন, ব্রাউজার আপনার ফোনের বা কম্পিউটারের ডিফল্ট ইমেইল অ্যাপ (যেমন: Gmail বা Outlook) খোলার চেষ্টা করে। যেহেতু এই অ্যাপটি একটি আইফ্রেমের (iframe) ভেতরে চলছে, তাই সরাসরি ইমেইল অ্যাপ খোলার অনুমতি না পেয়ে ব্রাউজার আপনাকে ফুল ব্রাউজারে (Chrome) গিয়ে লিঙ্কটি ওপেন করতে বলে।
+আপনি যদি চান যে এটি ব্রাউজারে না গিয়ে সরাসরি একটি মেসেজ দেখাক, তবে আমি এটি পরিবর্তন করে একটি ছোট "Contact Info" পপ-আপ বা মেসেজ বক্স তৈরি করে দিতে পারি। আপনি কি সেটা চান?
+আপনার ডেপ্লয়মেন্টের অবস্থা কী? কারেকশনগুলো করার পর Vercel-এ কি সাকসেসফুলি ডেপ্লয় হয়েছে?
+ok, pop up banao
+Gemini 3 Flash Preview
+Ran for 19s
+lightbulb
+Thought for 4 seconds
+edit
+Edited 2 files
+src/App.tsx
+check_circle
+src/App.tsx
+check_circle
+আমি "Contact Us" লিঙ্কে ক্লিক করলে ইমেইল অ্যাপ খোলার বদলে একটি সুন্দর পপ-আপ (Popup) তৈরি করে দিয়েছি।
+এখন "Contact Us"-এ ক্লিক করলে সরাসরি স্ক্রিনে একটি বক্স আসবে যেখানে আপনার ইমেইল অ্যাড্রেসটি দেখা যাবে। এটি আইফ্রেমের ভেতরেও কোনো সমস্যা ছাড়াই কাজ করবে।
+চেক করে দেখুন, এখন আর Chrome-এ যাওয়ার প্রয়োজন হবে না! 🎨✨
+Checkpoint
+I made some changes.
+summarize_auto
+Manual edit
+edit
+Edited 1 file
+.env
+delete
+Checkpoint
+firebase e authorization chara r kichu korte hobe?
+Gemini 3 Flash Preview
+Ran for 6s
+lightbulb
+Thought for 6 seconds
+হ্যাঁ, Firebase-এ Authorized Domains অ্যাড করা ছাড়াও আরও ২টি ছোট কিন্তু গুরুত্বপূর্ণ কাজ আপনাকে নিশ্চিত করতে হবে:
+১. Google Sign-in এনাবল করা (Enable Google Provider)
+Firebase কনসোলে গিয়ে চেক করুন Google লগইন চালু আছে কি না:
+Authentication > Sign-in method-এ যান।
+সেখানে "Google" প্রোভাইডারটি Enabled করা আছে কি না নিশ্চিত করুন। না থাকলে সেটি চালু করে দিন।
+২. Firestore Rules ডেপ্লয় করা (Deploy Rules)
+আপনার ডেটাবেস যাতে সুরক্ষিত থাকে এবং অ্যাপটি ডেটা রিড/রাইট করতে পারে, সেজন্য সিকিউরিটি রুলস ডেপ্লয় করা প্রয়োজন। আমি আপনার জন্য রুলসগুলো তৈরি করে রেখেছি। আপনি চাইলে আমি এখনই সেগুলো আপনার Firebase প্রজেক্টে ডেপ্লয় করে দিতে পারি।
+আপনি কি চান আমি রুলসগুলো ডেপ্লয় করে দেই? (এজন্য আপনার firebase-applet-config.json ফাইলটি সঠিক থাকতে হবে, যা ইতিমধ্যেই আছে)।
+এছাড়াও, আপনি যদি GitHub-এ কোড পুশ করেন, তবে মনে রাখবেন:
+আপনার .env ফাইলটি যেন GitHub-এ না যায় (এটি সাধারণত .gitignore-এ থাকে)।
+Vercel-এ ভেরিয়েবলগুলো ঠিকমতো সেট থাকলে অ্যাপটি চমৎকারভাবে কাজ করবে।
+আর কোনো প্রশ্ন থাকলে বলতে পারেন!
+I made some changes.
+Checkpoint
+I made some changes.
+Checkpoint
+add a new thing , keep a subtitle and there will be " Save your link in a single site and use whenever you want"
+Gemini 3 Flash Preview
+Ran for 12s
+description
+Read file
+lightbulb
+Thought for 4 seconds
+edit
+Edited 1 file
+src/components/Landing.tsx
+check_circle
+আমি ল্যান্ডিং পেজে আপনার অনুরোধ করা সাবটাইটেলটি যোগ করে দিয়েছি। এখন সেখানে লেখা আছে: "Save your link in a single site and use whenever you want"।
+চেক করে দেখুন, এটি এখন আপনার অ্যাপের প্রধান শিরোনামের নিচে সুন্দরভাবে দেখা যাচ্ছে। আর কোনো পরিবর্তন প্রয়োজন হলে জানাবেন!
+Checkpoint
+fix expost as pdf button and after fixing, tell me where you change the code(Which file), in bangla
+Gemini 3 Flash Preview
+Running for 80s
+
+lightbulb
+Refining the Structure
+spark
+Working
+chevron_right
+src/components/Dashboard.tsx
+check_circle
+Make changes, add new features, ask for anything
+draft
+.env.example
+draft
+.gitignore
+data_object
+firebase-applet-config.json
+data_object
+firebase-blueprint.json
+draft
+firestore.rules
+code
+index.html
+data_object
+metadata.json
+data_object
+package-lock.json
+data_object
+package.json
+folder
+src
+segment
+App.tsx
+folder
+components
+segment
+Dashboard.tsx
+
+more_vert
+segment
+Landing.tsx
+segment
+LinkRow.tsx
+segment
+Navbar.tsx
+segment
+Onboarding.tsx
+segment
+PlaylistRow.tsx
+stylus
+index.css
+folder
+lib
+segment
+firebase.ts
+segment
+utils.ts
+segment
+main.tsx
+folder
+types
+segment
+index.ts
+data_object
+tsconfig.json
+data_object
+vercel.json
+segment
+vite.config.ts
 import React, { useState, useRef } from 'react';
 import { User } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { UserProfile, LinkItem, Playlist } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, FolderPlus, FileText, Code } from 'lucide-react';
+import { Plus, Download, FolderPlus, Share2, FileText, Code } from 'lucide-react';
 import LinkRow from './LinkRow';
 import PlaylistRow from './PlaylistRow';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
-interface DashboardProps {
-  user: User;
-  profile: UserProfile;
-}
-
-export default function Dashboard({ user, profile }: DashboardProps) {
-  const [isAddingLink, setIsAddingLink] = useState(false);
-  const [isAddingPlaylist, setIsAddingPlaylist] = useState(false);
-  const dashboardRef = useRef<HTMLDivElement>(null);
-
-  const [newLink, setNewLink] = useState({ title: '', subtitle: '', url: '' });
-  const [newPlaylistName, setNewPlaylistName] = useState('');
-
-  const handleAddLink = async (e: React.FormEvent) => {
-    e.preventDefault();
-    let finalUrl = newLink.url.trim();
-    if (finalUrl && !/^https?:\/\//i.test(finalUrl)) finalUrl = `https://${finalUrl}`;
-    const link: LinkItem = { id: crypto.randomUUID(), title: newLink.title, subtitle: newLink.subtitle, url: finalUrl, color: '#18181b', pinned: false };
-    const userDocRef = doc(db, 'users', user.uid);
-    await updateDoc(userDocRef, { links: [...profile.links, link] });
-    setIsAddingLink(false);
-    setNewLink({ title: '', subtitle: '', url: '' });
-  };
-
-  const handleAddPlaylist = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const playlist: Playlist = { id: crypto.randomUUID(), name: newPlaylistName };
-    const userDocRef = doc(db, 'users', user.uid);
-    await updateDoc(userDocRef, { playlists: [...profile.playlists, playlist] });
-    setIsAddingPlaylist(false);
-    setNewPlaylistName('');
-  };
-
-  const exportPDF = async () => {
-    if (!dashboardRef.current) return;
-    const exportActions = document.getElementById('export-actions');
-    
-    try {
-      if (exportActions) exportActions.style.visibility = 'hidden';
-      
-      // ব্রাউজারকে রেন্ডার করার জন্য সময় দেওয়া (Celeron N4120 এর জন্য জরুরি)
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      const canvas = await html2canvas(dashboardRef.current, {
-        scale: 1.5,
-        useCORS: true,
-        backgroundColor: '#fafafa',
-        logging: false
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-      pdf.save(`${profile.username}-profile.pdf`);
-
-    } catch (error) {
-      console.error("PDF Export failed:", error);
-    } finally {
-      if (exportActions) exportActions.style.visibility = 'visible';
-    }
-  };
-
-  const exportHTML = () => {
-    const htmlContent = `<!DOCTYPE html><html><head><title>${profile.fullName}</title><script src="https://cdn.tailwindcss.com"></script></head><body class="p-10 bg-zinc-50 font-sans"><h1 class="text-3xl font-bold">${profile.fullName}</h1><p class="text-zinc-500 mb-8">@${profile.username}</p><div class="space-y-4">${profile.links.map(l => `<div class="p-4 bg-white rounded-xl shadow-sm border-l-4" style="border-color: ${l.color}"><h3 class="font-bold">${l.title}</h3><p class="text-sm text-zinc-500">${l.subtitle}</p><a href="${l.url}" class="text-blue-500 text-xs">${l.url}</a></div>`).join('')}</div></body></html>`;
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `${profile.username}.html`; a.click();
-  };
-
-  return (
-    <div ref={dashboardRef} className="space-y-8 p-4 md:p-8 bg-zinc-50 dark:bg-zinc-950 min-h-screen">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight">Welcome, {profile.fullName.split(' ')[0]}</h1>
-          <p className="text-zinc-500">Manage your digital presence effortlessly.</p>
-        </div>
-        
-        <div id="export-actions" className="flex items-center gap-2">
-          <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all shadow-sm">
-            <FileText size={16} className="text-red-500" /> Export as PDF
-          </button>
-          <button onClick={exportHTML} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all shadow-sm">
-            <Code size={16} className="text-blue-500" /> Export as HTML
-          </button>
-        </div>
-      </div>
-
-      <div className="flex gap-4">
-        <button onClick={() => setIsAddingLink(true)} className="flex-1 flex items-center justify-center gap-2 py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-[1.01] transition-all shadow-lg">
-          <Plus size={24} /> Add URL
-        </button>
-        <button onClick={() => setIsAddingPlaylist(true)} className="px-8 flex items-center justify-center gap-2 py-5 bg-white dark:bg-zinc-900 border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl font-black text-lg hover:bg-zinc-50 transition-all shadow-sm">
-          <FolderPlus size={24} className="text-orange-500" /> New Playlist
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {isAddingLink && (
-          <motion.form initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onSubmit={handleAddLink} className="p-8 bg-white dark:bg-zinc-900 rounded-[2rem] border border-zinc-200 dark:border-zinc-800 shadow-xl space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Title" value={newLink.title} onChange={e => setNewLink({ ...newLink, title: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
-              <input type="text" placeholder="Subtitle" value={newLink.subtitle} onChange={e => setNewLink({ ...newLink, subtitle: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" />
-            </div>
-            <input type="text" placeholder="URL" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
-            <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setIsAddingLink(false)} className="px-4 py-2 text-zinc-400 hover:text-zinc-600 transition-colors">Cancel</button>
-              <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors">Save Link</button>
-            </div>
-          </motion.form>
-        )}
-      </AnimatePresence>
-
-      <div className="space-y-6">
-        <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
-        {profile.links.filter(l => !l.pinned && !l.playlistId).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
-        {profile.playlists.map(playlist => (
-          <PlaylistRow key={playlist.id} playlist={playlist} links={profile.links.filter(l => l.playlistId === playlist.id)} user={user} profile={profile} />
-        ))}
-      </div>
-    </div>
-  );
-}
+Refining the Structure
