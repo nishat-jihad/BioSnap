@@ -52,7 +52,6 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
   const changeColor = async (color: string) => {
     const newLinks = profile.links.map(l => l.id === link.id ? { ...l, color } : l);
     await updateProfile(newLinks);
-    setShowColorPicker(false);
   };
 
   const moveToPlaylist = async (playlistId: string | undefined) => {
@@ -65,31 +64,65 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
     <div className="relative group">
       <motion.div
         layout
-        className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex items-center justify-between hover:shadow-md transition-all"
+        className="glass-card p-4 flex items-center justify-between hover:shadow-lg transition-all"
       >
         <div className="flex items-center gap-4 flex-1 min-w-0">
           <div className="relative">
             <button
               onClick={() => setShowColorPicker(!showColorPicker)}
-              className="w-4 h-4 rounded-full border border-zinc-200 dark:border-zinc-700 transition-transform hover:scale-125"
+              className="w-5 h-5 rounded-full border-2 border-white/50 dark:border-white/20 shadow-sm transition-transform hover:scale-125"
               style={{ backgroundColor: link.color }}
             />
             <AnimatePresence>
               {showColorPicker && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute left-0 top-6 z-20 p-2 bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700 grid grid-cols-4 gap-2"
+                  initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                  className="absolute left-0 top-10 z-20 p-4 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 w-64"
                 >
-                  {['#18181b', '#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#64748b'].map(c => (
-                    <button
-                      key={c}
-                      onClick={() => changeColor(c)}
-                      className="w-6 h-6 rounded-full border border-zinc-200 dark:border-zinc-700"
-                      style={{ backgroundColor: c }}
-                    />
-                  ))}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-6 gap-2">
+                      {[
+                        '#18181b', '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16',
+                        '#10b981', '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7',
+                        '#d946ef', '#ec4899', '#f43f5e', '#64748b', '#71717a', '#a1a1aa'
+                      ].map(c => (
+                        <button
+                          key={c}
+                          onClick={() => changeColor(c)}
+                          className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 flex items-center justify-center ${link.color === c ? 'border-brand-primary scale-110' : 'border-white/50 dark:border-white/10'}`}
+                          style={{ backgroundColor: c }}
+                        >
+                          {link.color === c && <Check size={12} className="text-white drop-shadow-sm" />}
+                        </button>
+                      ))}
+                    </div>
+                    
+                    <div className="h-px bg-zinc-100 dark:bg-zinc-800" />
+                    
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 ml-1">Custom Hex</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={link.color}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (/^#[0-9A-F]{0,6}$/i.test(val)) {
+                              changeColor(val);
+                            }
+                          }}
+                          className="flex-1 px-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 outline-none focus:ring-2 focus:ring-brand-primary transition-all"
+                          placeholder="#000000"
+                        />
+                        <div 
+                          className="w-9 h-9 rounded-xl border-2 border-white/50 dark:border-white/10 shadow-inner shrink-0"
+                          style={{ backgroundColor: link.color }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -98,9 +131,9 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-zinc-900 dark:text-zinc-100 truncate">{link.title}</h3>
-              {link.pinned && <Pin size={12} className="text-zinc-400 fill-zinc-400" />}
+              {link.pinned && <Pin size={12} className="text-brand-accent fill-brand-accent" />}
             </div>
-            <p className="text-sm text-zinc-500 truncate">{link.subtitle || 'No description'}</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">{link.subtitle || 'No description'}</p>
           </div>
         </div>
 
@@ -109,13 +142,13 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+            className="p-2 text-zinc-400 hover:text-brand-primary transition-colors"
           >
             <ExternalLink size={18} />
           </a>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+            className="p-2 text-zinc-400 hover:text-brand-primary transition-colors"
           >
             <MoreVertical size={18} />
           </button>
@@ -128,18 +161,18 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute right-0 top-full mt-2 z-30 w-56 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 p-2 overflow-hidden"
+            className="absolute right-0 top-full mt-2 z-30 w-56 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-2 overflow-hidden"
           >
             <button
               onClick={togglePin}
-              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-brand-primary/10 hover:text-brand-primary rounded-xl transition-colors"
             >
               <Pin size={16} />
               {link.pinned ? 'Unpin' : 'Pin to Top'}
             </button>
             <button
               onClick={() => setIsEditing(true)}
-              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-brand-primary/10 hover:text-brand-primary rounded-xl transition-colors"
             >
               <Edit2 size={16} />
               Edit Link
@@ -152,7 +185,7 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
               <div className="space-y-1">
                 <button
                   onClick={() => moveToPlaylist(undefined)}
-                  className={`w-full text-left px-2 py-1.5 text-xs rounded-lg transition-colors ${!link.playlistId ? 'bg-zinc-100 dark:bg-zinc-800 font-bold' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800'}`}
+                  className={`w-full text-left px-2 py-1.5 text-xs rounded-lg transition-colors ${!link.playlistId ? 'bg-brand-primary/20 text-brand-primary font-bold' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800'}`}
                 >
                   None
                 </button>
@@ -160,7 +193,7 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
                   <button
                     key={p.id}
                     onClick={() => moveToPlaylist(p.id)}
-                    className={`w-full text-left px-2 py-1.5 text-xs rounded-lg transition-colors ${link.playlistId === p.id ? 'bg-zinc-100 dark:bg-zinc-800 font-bold' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800'}`}
+                    className={`w-full text-left px-2 py-1.5 text-xs rounded-lg transition-colors ${link.playlistId === p.id ? 'bg-brand-primary/20 text-brand-primary font-bold' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800'}`}
                   >
                     {p.name}
                   </button>
@@ -172,7 +205,7 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
             
             <button
               onClick={handleDelete}
-              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
             >
               <Trash2 size={16} />
               Delete
@@ -183,51 +216,60 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
 
       <AnimatePresence>
         {isEditing && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
             <motion.form
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onSubmit={handleEdit}
-              className="w-full max-w-md bg-white dark:bg-zinc-900 p-8 rounded-3xl shadow-2xl space-y-4"
+              className="w-full max-w-md glass-card p-8 space-y-6"
             >
-              <h2 className="text-2xl font-bold">Edit Link</h2>
+              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-secondary">Edit Link</h2>
               <div className="space-y-4">
-                <input
-                  type="text"
-                  required
-                  value={editData.title}
-                  onChange={e => setEditData({ ...editData, title: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 border-none outline-none"
-                  placeholder="Title"
-                />
-                <input
-                  type="text"
-                  value={editData.subtitle}
-                  onChange={e => setEditData({ ...editData, subtitle: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 border-none outline-none"
-                  placeholder="Subtitle"
-                />
-                <input
-                  type="text"
-                  required
-                  value={editData.url}
-                  onChange={e => setEditData({ ...editData, url: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 border-none outline-none"
-                  placeholder="URL (e.g. google.com)"
-                />
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 ml-1">Title</label>
+                  <input
+                    type="text"
+                    required
+                    value={editData.title}
+                    onChange={e => setEditData({ ...editData, title: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-brand-primary outline-none transition-all"
+                    placeholder="Title"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 ml-1">Subtitle</label>
+                  <input
+                    type="text"
+                    value={editData.subtitle}
+                    onChange={e => setEditData({ ...editData, subtitle: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-brand-primary outline-none transition-all"
+                    placeholder="Subtitle"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 ml-1">URL</label>
+                  <input
+                    type="text"
+                    required
+                    value={editData.url}
+                    onChange={e => setEditData({ ...editData, url: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-brand-primary outline-none transition-all"
+                    placeholder="URL (e.g. google.com)"
+                  />
+                </div>
               </div>
-              <div className="flex justify-end gap-2 pt-4">
+              <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="px-4 py-2 text-sm font-semibold text-zinc-500"
+                  className="px-6 py-2.5 text-sm font-bold text-zinc-500 hover:text-zinc-700 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl text-sm font-bold"
+                  className="px-8 py-2.5 bg-brand-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-brand-primary/25 hover:scale-105 transition-all"
                 >
                   Update Link
                 </button>

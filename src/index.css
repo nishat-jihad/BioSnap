@@ -2,7 +2,36 @@
 
 @theme {
   --color-zinc-950: #09090b;
+  --color-brand-primary: #6366f1;
+  --color-brand-secondary: #ec4899;
+  --color-brand-accent: #f59e0b;
 }
 
 /* Enable class-based dark mode in Tailwind 4 */
 @variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    @apply transition-colors duration-500;
+  }
+}
+
+.mesh-gradient {
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.08) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.08) 0, transparent 50%);
+}
+
+.dark .mesh-gradient {
+  background-color: #09090b;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.15) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.15) 0, transparent 50%);
+}
+
+.glass-card {
+  @apply bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-white/20 dark:border-zinc-800/50;
+}

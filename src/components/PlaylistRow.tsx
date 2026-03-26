@@ -36,22 +36,24 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
       <div className="flex items-center justify-between group">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex-1 flex items-center gap-3 p-4 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all text-left"
+          className="flex-1 flex items-center gap-3 p-4 glass-card hover:bg-white/40 dark:hover:bg-zinc-800/40 transition-all text-left"
         >
-          <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-zinc-500">
-            <Folder size={18} />
+          <div className="p-2.5 bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 rounded-xl text-brand-primary shadow-inner">
+            <Folder size={20} />
           </div>
           <div className="flex-1">
             <h3 className="font-bold text-zinc-900 dark:text-zinc-100">{playlist.name}</h3>
-            <p className="text-xs text-zinc-500">{links.length} links</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">{links.length} links</p>
           </div>
-          {isOpen ? <ChevronDown size={20} className="text-zinc-400" /> : <ChevronRight size={20} className="text-zinc-400" />}
+          <div className="p-1 rounded-full bg-zinc-100/50 dark:bg-zinc-800/50">
+            {isOpen ? <ChevronDown size={18} className="text-zinc-500" /> : <ChevronRight size={18} className="text-zinc-500" />}
+          </div>
         </button>
 
         <div className="relative ml-2">
           <button
             onClick={() => setShowOptions(!showOptions)}
-            className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+            className="p-2.5 text-zinc-400 hover:text-brand-primary hover:bg-white/50 dark:hover:bg-zinc-800/50 rounded-xl transition-all"
           >
             <MoreHorizontal size={20} />
           </button>
@@ -59,14 +61,14 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
           <AnimatePresence>
             {showOptions && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute right-0 top-full mt-2 z-20 w-40 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-800 p-1"
+                initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                className="absolute right-0 top-full mt-2 z-20 w-44 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-1.5"
               >
                 <button
                   onClick={deletePlaylist}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
                 >
                   <Trash2 size={14} />
                   Delete Playlist

@@ -68,14 +68,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+    <div className="min-h-screen mesh-gradient text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
       <Navbar 
         user={user} 
         isDarkMode={isDarkMode} 
         toggleTheme={() => setIsDarkMode(!isDarkMode)} 
       />
       
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="container mx-auto px-4 py-12 max-w-4xl">
         <AnimatePresence mode="wait">
           {!user ? (
             <motion.div
@@ -108,13 +108,23 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="mt-auto py-8 border-t border-zinc-200 dark:border-zinc-800 text-center text-zinc-500 text-sm">
-        <div className="flex justify-center gap-6 mb-4">
-          <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
-          <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-100">About Us</a>
-          <a href="mailto:alamnishat456@gmail.com" className="hover:text-zinc-900 dark:hover:text-zinc-100">Contact Us</a>
+      <footer className="mt-auto py-12 border-t border-white/10 text-center">
+        <div className="flex justify-center gap-8 mb-6">
+          <a href="/" className="text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-brand-primary transition-colors">Home</a>
+          <a href="#" className="text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-brand-secondary transition-colors">About Us</a>
+          <a href="mailto:alamnishat456@gmail.com" className="text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-brand-accent transition-colors">Contact Us</a>
         </div>
-        <p>&copy; 2026 BioSnap. All rights reserved.</p>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-6 h-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg flex items-center justify-center">
+              <span className="text-white font-black text-xs">B</span>
+            </div>
+            <span className="font-black tracking-tighter text-zinc-400">BioSnap</span>
+          </div>
+          <p className="text-zinc-500 dark:text-zinc-600 text-[10px] font-bold uppercase tracking-[0.2em]">
+            &copy; 2026 BioSnap. Crafted with passion.
+          </p>
+        </div>
       </footer>
     </div>
   );
