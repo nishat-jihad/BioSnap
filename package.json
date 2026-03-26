@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plus, FolderPlus, FileText, Code } from 'lucide-react';
 import LinkRow from './LinkRow';
 import PlaylistRow from './PlaylistRow';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf'; // Corrected Import
 import html2canvas from 'html2canvas';
 
 interface DashboardProps {
@@ -43,19 +43,19 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     setNewPlaylistName('');
   };
 
-  // FULL CORRECTED EXPORT PDF
   const exportPDF = async () => {
     if (!dashboardRef.current) return;
+    
     const exportActions = document.getElementById('export-actions');
     
     try {
-      if (exportActions) exportActions.style.display = 'none';
+      // বাটনগুলো হাইড করা
+      if (exportActions) exportActions.style.opacity = '0';
 
       const canvas = await html2canvas(dashboardRef.current, {
-        scale: 1.5, // লো-এন্ড পিসির জন্য স্কেল কিছুটা কমানো হয়েছে যাতে ব্রাউজার ক্রাশ না করে
+        scale: 2,
         useCORS: true,
-        backgroundColor: '#fafafa',
-        logging: false
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#fafafa',
       });
 
       const imgData = canvas.toDataURL('image/png');
@@ -69,12 +69,13 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     } catch (error) {
       console.error("PDF Export failed:", error);
     } finally {
-      if (exportActions) exportActions.style.display = 'flex';
+      // বাটনগুলো আবার দৃশ্যমান করা
+      if (exportActions) exportActions.style.opacity = '1';
     }
   };
 
   const exportHTML = () => {
-    const htmlContent = `<!DOCTYPE html><html><head><title>${profile.fullName}</title><script src="https://cdn.tailwindcss.com"></script></head><body class="p-10 bg-zinc-50 font-sans"><h1 class="text-3xl font-bold">${profile.fullName}</h1><p class="text-zinc-500 mb-8">@${profile.username}</p><div class="space-y-4">${profile.links.map(l => `<div class="p-4 bg-white rounded-xl shadow-sm border-l-4" style="border-color: ${l.color}"><h3 class="font-bold">${l.title}</h3><p class="text-sm text-zinc-500">${l.subtitle}</p><a href="${l.url}" class="text-blue-500 text-xs">${l.url}</a></div>`).join('')}</div></body></html>`;
+    const htmlContent = `<!DOCTYPE html><html><head><title>${profile.fullName}</title><script src="https://cdn.tailwindcss.com"></script></head><body class="p-10 bg-zinc-50"><h1 class="text-3xl font-bold">${profile.fullName}</h1><p class="text-zinc-500 mb-8">@${profile.username}</p><div class="space-y-4">${profile.links.map(l => `<div class="p-4 bg-white rounded-xl shadow-sm border-l-4" style="border-color: ${l.color}"><h3 class="font-bold">${l.title}</h3><p class="text-sm text-zinc-500">${l.subtitle}</p><a href="${l.url}" class="text-blue-500 text-xs">${l.url}</a></div>`).join('')}</div></body></html>`;
     const blob = new Blob([htmlContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `${profile.username}.html`; a.click();
@@ -88,33 +89,33 @@ export default function Dashboard({ user, profile }: DashboardProps) {
           <p className="text-zinc-500">Manage your digital presence effortlessly.</p>
         </div>
         
-        <div id="export-actions" className="flex items-center gap-2">
-          <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all">
+        <div id="export-actions" className="flex items-center gap-2 transition-opacity duration-300">
+          <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold">
             <FileText size={16} className="text-red-500" /> Export as PDF
           </button>
-          <button onClick={exportHTML} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all">
+          <button onClick={exportHTML} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold">
             <Code size={16} className="text-blue-500" /> Export as HTML
           </button>
         </div>
       </div>
 
       <div className="flex gap-4">
-        <button onClick={() => setIsAddingLink(true)} className="flex-1 flex items-center justify-center gap-2 py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-[1.02] transition-all shadow-lg">
+        <button onClick={() => setIsAddingLink(true)} className="flex-1 flex items-center justify-center gap-2 py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-[1.02] transition-all">
           <Plus size={24} /> Add URL
         </button>
-        <button onClick={() => setIsAddingPlaylist(true)} className="px-8 flex items-center justify-center gap-2 py-5 bg-white dark:bg-zinc-900 border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl font-black text-lg hover:bg-zinc-50 transition-all">
+        <button onClick={() => setIsAddingPlaylist(true)} className="px-8 flex items-center justify-center gap-2 py-5 bg-white dark:bg-zinc-900 border-2 border-zinc-100 rounded-2xl font-black text-lg hover:bg-zinc-50 transition-all">
           <FolderPlus size={24} className="text-orange-500" /> New Playlist
         </button>
       </div>
 
       <AnimatePresence>
         {isAddingLink && (
-          <motion.form initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onSubmit={handleAddLink} className="p-8 bg-white dark:bg-zinc-900 rounded-[2rem] border border-zinc-200 dark:border-zinc-800 shadow-xl space-y-4">
+          <motion.form initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onSubmit={handleAddLink} className="p-8 bg-white dark:bg-zinc-900 rounded-[2rem] border border-zinc-200 shadow-xl space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input type="text" placeholder="Title" value={newLink.title} onChange={e => setNewLink({ ...newLink, title: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
               <input type="text" placeholder="Subtitle" value={newLink.subtitle} onChange={e => setNewLink({ ...newLink, subtitle: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" />
             </div>
-            <input type="text" placeholder="URL (e.g. google.com)" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
+            <input type="text" placeholder="URL" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setIsAddingLink(false)} className="px-4 py-2 text-zinc-400">Cancel</button>
               <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Link</button>
@@ -130,7 +131,6 @@ export default function Dashboard({ user, profile }: DashboardProps) {
             {profile.links.filter(l => l.pinned).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
           </div>
         )}
-
         <div className="space-y-6">
           <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
           {profile.links.filter(l => !l.pinned && !l.playlistId).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
