@@ -49,11 +49,15 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     
     try {
       if (exportActions) exportActions.style.visibility = 'hidden';
+      
+      // ব্রাউজারকে রেন্ডার করার জন্য সময় দেওয়া (Celeron N4120 এর জন্য জরুরি)
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const canvas = await html2canvas(dashboardRef.current, {
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
-        backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#fafafa',
+        backgroundColor: '#fafafa',
+        logging: false
       });
 
       const imgData = canvas.toDataURL('image/png');
@@ -61,8 +65,8 @@ export default function Dashboard({ user, profile }: DashboardProps) {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${profile.username}-biosnap.pdf`);
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+      pdf.save(`${profile.username}-profile.pdf`);
 
     } catch (error) {
       console.error("PDF Export failed:", error);
@@ -87,20 +91,20 @@ export default function Dashboard({ user, profile }: DashboardProps) {
         </div>
         
         <div id="export-actions" className="flex items-center gap-2">
-          <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all">
+          <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all shadow-sm">
             <FileText size={16} className="text-red-500" /> Export as PDF
           </button>
-          <button onClick={exportHTML} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all">
+          <button onClick={exportHTML} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all shadow-sm">
             <Code size={16} className="text-blue-500" /> Export as HTML
           </button>
         </div>
       </div>
 
       <div className="flex gap-4">
-        <button onClick={() => setIsAddingLink(true)} className="flex-1 flex items-center justify-center gap-2 py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-[1.02] transition-all shadow-lg">
+        <button onClick={() => setIsAddingLink(true)} className="flex-1 flex items-center justify-center gap-2 py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-[1.01] transition-all shadow-lg">
           <Plus size={24} /> Add URL
         </button>
-        <button onClick={() => setIsAddingPlaylist(true)} className="px-8 flex items-center justify-center gap-2 py-5 bg-white dark:bg-zinc-900 border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl font-black text-lg hover:bg-zinc-50 transition-all">
+        <button onClick={() => setIsAddingPlaylist(true)} className="px-8 flex items-center justify-center gap-2 py-5 bg-white dark:bg-zinc-900 border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl font-black text-lg hover:bg-zinc-50 transition-all shadow-sm">
           <FolderPlus size={24} className="text-orange-500" /> New Playlist
         </button>
       </div>
@@ -114,21 +118,19 @@ export default function Dashboard({ user, profile }: DashboardProps) {
             </div>
             <input type="text" placeholder="URL" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setIsAddingLink(false)} className="px-4 py-2 text-zinc-400">Cancel</button>
-              <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Link</button>
+              <button type="button" onClick={() => setIsAddingLink(false)} className="px-4 py-2 text-zinc-400 hover:text-zinc-600 transition-colors">Cancel</button>
+              <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors">Save Link</button>
             </div>
           </motion.form>
         )}
       </AnimatePresence>
 
-      <div className="space-y-8">
-        <div className="space-y-6">
-          <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
-          {profile.links.filter(l => !l.pinned && !l.playlistId).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
-          {profile.playlists.map(playlist => (
-            <PlaylistRow key={playlist.id} playlist={playlist} links={profile.links.filter(l => l.playlistId === playlist.id)} user={user} profile={profile} />
-          ))}
-        </div>
+      <div className="space-y-6">
+        <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
+        {profile.links.filter(l => !l.pinned && !l.playlistId).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
+        {profile.playlists.map(playlist => (
+          <PlaylistRow key={playlist.id} playlist={playlist} links={profile.links.filter(l => l.playlistId === playlist.id)} user={user} profile={profile} />
+        ))}
       </div>
     </div>
   );
