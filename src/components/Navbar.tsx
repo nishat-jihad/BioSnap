@@ -13,7 +13,7 @@ export default function Navbar({ user, isDarkMode, toggleTheme }: NavbarProps) {
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <motion.div 
             whileHover={{ scale: 1.1 }}
             className="w-8 h-8 bg-zinc-900 dark:bg-zinc-100 rounded-lg flex items-center justify-center"
@@ -21,14 +21,14 @@ export default function Navbar({ user, isDarkMode, toggleTheme }: NavbarProps) {
             <span className="text-white dark:text-zinc-900 font-bold text-xl">B</span>
           </motion.div>
           <span className="font-bold text-xl tracking-tight hidden sm:block">BioSnap</span>
-        </div>
+        </a>
 
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-6 mr-4">
             <a href="#" className="text-sm font-medium hover:text-zinc-500 transition-colors flex items-center gap-1">
               <Home size={16} /> Home
             </a>
-            <a href="#" className="text-sm font-medium hover:text-zinc-500 transition-colors flex items-center gap-1">
+            <a href="mailto:alamnishat456@gmail.com" className="text-sm font-medium hover:text-zinc-500 transition-colors flex items-center gap-1">
               <Mail size={16} /> Contact Us
             </a>
           </div>

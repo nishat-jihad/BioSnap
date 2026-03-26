@@ -37,7 +37,13 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newLinks = profile.links.map(l => l.id === link.id ? { ...l, ...editData } : l);
+    
+    let finalUrl = editData.url.trim();
+    if (finalUrl && !/^https?:\/\//i.test(finalUrl)) {
+      finalUrl = `https://${finalUrl}`;
+    }
+
+    const newLinks = profile.links.map(l => l.id === link.id ? { ...l, ...editData, url: finalUrl } : l);
     await updateProfile(newLinks);
     setIsEditing(false);
     setIsMenuOpen(false);
@@ -203,12 +209,12 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
                   placeholder="Subtitle"
                 />
                 <input
-                  type="url"
+                  type="text"
                   required
                   value={editData.url}
                   onChange={e => setEditData({ ...editData, url: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 border-none outline-none"
-                  placeholder="URL"
+                  placeholder="URL (e.g. google.com)"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-4">

@@ -112,7 +112,7 @@ export default function App() {
         <div className="flex justify-center gap-6 mb-4">
           <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
           <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-100">About Us</a>
-          <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-100">Contact Us</a>
+          <a href="mailto:alamnishat456@gmail.com" className="hover:text-zinc-900 dark:hover:text-zinc-100">Contact Us</a>
         </div>
         <p>&copy; 2026 BioSnap. All rights reserved.</p>
       </footer>

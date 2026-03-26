@@ -27,9 +27,17 @@ export default function Dashboard({ user, profile }: DashboardProps) {
 
   const handleAddLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    let finalUrl = newLink.url.trim();
+    if (finalUrl && !/^https?:\/\//i.test(finalUrl)) {
+      finalUrl = `https://${finalUrl}`;
+    }
+
     const link: LinkItem = {
       id: crypto.randomUUID(),
-      ...newLink,
+      title: newLink.title,
+      subtitle: newLink.subtitle,
+      url: finalUrl,
       color: '#18181b', // Default zinc-900
       pinned: false
     };
@@ -199,9 +207,9 @@ export default function Dashboard({ user, profile }: DashboardProps) {
               />
             </div>
             <input
-              type="url"
+              type="text"
               required
-              placeholder="Paste URL"
+              placeholder="Paste URL (e.g. google.com)"
               value={newLink.url}
               onChange={e => setNewLink({ ...newLink, url: e.target.value })}
               className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 border-none outline-none"

@@ -5,7 +5,6 @@ import { motion } from 'motion/react';
 import { Mail, Lock, ArrowRight, Chrome } from 'lucide-react';
 
 export default function Landing() {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -22,10 +21,16 @@ export default function Landing() {
     e.preventDefault();
     setError('');
     try {
-      if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
-      } else {
+      // Try to create account first
+      try {
         await createUserWithEmailAndPassword(auth, email, password);
+      } catch (err: any) {
+        // If user exists, try to sign in
+        if (err.code === 'auth/email-already-in-use') {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          throw err;
+        }
       }
     } catch (err: any) {
       setError(err.message);
@@ -49,25 +54,6 @@ export default function Landing() {
       </div>
 
       <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl shadow-xl shadow-zinc-200/50 dark:shadow-none border border-zinc-100 dark:border-zinc-800">
-        <div className="flex gap-4 mb-8">
-          <button
-            onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isLogin ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800'
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all ${
-              !isLogin ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800'
-            }`}
-          >
-            Get Started
-          </button>
-        </div>
-
         <button
           onClick={handleGoogleSignIn}
           className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all font-medium mb-6"
@@ -122,7 +108,7 @@ export default function Landing() {
             type="submit"
             className="w-full py-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all"
           >
-            {isLogin ? 'Sign In' : 'Create Account'}
+            Get Started
             <ArrowRight size={18} />
           </button>
         </form>
