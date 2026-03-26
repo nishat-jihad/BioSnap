@@ -1,22 +1,27 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import firebaseAppletConfig from '../../firebase-applet-config.json';
 
+// সরাসরি আপনার Firebase কনফিগারেশন ডাটা
 const firebaseConfig = {
-  // আপনার API Key এবং অন্যান্য তথ্য .env ফাইল বা JSON ফাইলে থাকা জরুরি
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || firebaseAppletConfig.apiKey,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || firebaseAppletConfig.authDomain,
-  
-  // এখানে আপনার Project ID টি বসিয়ে দেওয়া হলো
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "biosnap-6e5c5", 
-  
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || firebaseAppletConfig.storageBucket,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || firebaseAppletConfig.messagingSenderId,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || firebaseAppletConfig.appId,
+  apiKey: "AIzaSyAwl8qklsbUEhIz9R1s4CSO0zGSQkwnLhM",
+  authDomain: "biosnap-6e5c5.firebaseapp.com",
+  projectId: "biosnap-6e5c5",
+  storageBucket: "biosnap-6e5c5.firebasestorage.app",
+  messagingSenderId: "1014269687184",
+  appId: "1:1014269687184:web:c93b85fee093e4304eef15",
+  measurementId: "G-HMEQY9H2JV"
 };
 
+// Firebase ইনিশিয়ালাইজ করা
 const app = initializeApp(firebaseConfig);
+
+// এক্সপোর্ট করা যাতে অন্য ফাইলে ব্যবহার করা যায়
 export const auth = getAuth(app);
-export const db = getFirestore(app, import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || firebaseAppletConfig.firestoreDatabaseId);
+export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
+
+// লগইন করার সময় একাউন্ট সিলেক্ট করার অপশন দেখাবে
+googleProvider.setCustomParameters({
+  prompt: 'select_account'
+});
