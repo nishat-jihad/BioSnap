@@ -68,20 +68,25 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Dark Footer with Email */}
+      {/* Dark Footer with Logo and Email */}
       <footer className="mt-auto py-10 bg-zinc-900 text-zinc-400 border-t border-white/5 text-center">
         <div className="flex justify-center gap-8 mb-4">
           <button onClick={() => window.scrollTo(0,0)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Home</button>
           <button onClick={() => setShowContact(true)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Contact Us</button>
         </div>
         <p className="text-[10px] font-bold text-zinc-500 mb-4 tracking-tighter uppercase italic">alamnishat456@gmail.com</p>
+        
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2">
             {/* ফুটারে 'B' আইকনের বদলে আপনার biosnap.png লোগো */}
-            <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center overflow-hidden">
-               <img src="/biosnap.png" alt="B" className="w-full h-full object-contain p-0.5" />
+            <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center overflow-hidden shadow-lg">
+               <img 
+                 src="/biosnap.png" 
+                 alt="BioSnap" 
+                 className="w-full h-full object-contain p-0.5" 
+               />
             </div>
-            <span className="font-black tracking-tighter text-zinc-100">BioSnap</span>
+            <span className="font-black tracking-tighter text-zinc-100 uppercase">BioSnap</span>
           </div>
           <p className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40">&copy; 2026 Crafted with passion.</p>
         </div>
