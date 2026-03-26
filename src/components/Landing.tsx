@@ -48,8 +48,11 @@ export default function Landing() {
           Your Bio, <br />
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">Perfectly Snapped.</span>
         </motion.h1>
-        <p className="text-zinc-700 dark:text-zinc-200 text-xl font-medium">
+        <p className="text-zinc-700 dark:text-zinc-200 text-xl font-medium mb-2">
           The most colorful way to manage your digital life.
+        </p>
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-widest">
+          Save your link in a single site and use whenever you want
         </p>
       </div>
 
