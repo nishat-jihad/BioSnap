@@ -42,7 +42,15 @@ export default function App() {
     isDarkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
   }, [isDarkMode]);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950"><motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-8 h-8 border-4 border-zinc-200 border-t-zinc-900 rounded-full" /></div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950">
+      <motion.div 
+        animate={{ rotate: 360 }} 
+        transition={{ repeat: Infinity, duration: 1, ease: "linear" }} 
+        className="w-8 h-8 border-4 border-zinc-200 border-t-zinc-900 dark:border-t-white rounded-full" 
+      />
+    </div>
+  );
 
   return (
     <div className="min-h-screen mesh-gradient text-zinc-900 dark:text-zinc-100 flex flex-col transition-colors">
@@ -69,7 +77,10 @@ export default function App() {
         <p className="text-[10px] font-bold text-zinc-500 mb-4 tracking-tighter uppercase italic">alamnishat456@gmail.com</p>
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-indigo-600 rounded flex items-center justify-center"><span className="text-white font-black text-[10px]">B</span></div>
+            {/* ফুটারে 'B' আইকনের বদলে আপনার biosnap.png লোগো */}
+            <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+               <img src="/biosnap.png" alt="B" className="w-full h-full object-contain p-0.5" />
+            </div>
             <span className="font-black tracking-tighter text-zinc-100">BioSnap</span>
           </div>
           <p className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40">&copy; 2026 Crafted with passion.</p>
