@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile and content data",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "subtitle": { "type": "string" },
+              "url": { "type": "string" },
+              "color": { "type": "string" },
+              "pinned": { "type": "boolean" },
+              "playlistId": { "type": "string" }
+            }
+          }
+        },
+        "playlists": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["fullName", "username", "email"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User data including links and playlists"
+    }
+  }
+}
