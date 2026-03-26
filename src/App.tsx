@@ -19,6 +19,7 @@ export default function App() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -112,7 +113,12 @@ export default function App() {
         <div className="flex justify-center gap-8 mb-6">
           <a href="/" className="text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-brand-primary transition-colors">Home</a>
           <a href="#" className="text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-brand-secondary transition-colors">About Us</a>
-          <a href="mailto:alamnishat456@gmail.com" className="text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-brand-accent transition-colors">Contact Us</a>
+          <button 
+            onClick={() => setShowContact(true)}
+            className="text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-brand-accent transition-colors"
+          >
+            Contact Us
+          </button>
         </div>
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 mb-2">
@@ -126,6 +132,53 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      <AnimatePresence>
+        {showContact && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowContact(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-md glass-card p-8 rounded-[2.5rem] shadow-2xl overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent" />
+              
+              <div className="text-center space-y-6">
+                <div className="w-16 h-16 bg-brand-accent/10 text-brand-accent rounded-2xl flex items-center justify-center mx-auto">
+                  <span className="font-black text-2xl">@</span>
+                </div>
+                
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-black tracking-tighter">Get in Touch</h2>
+                  <p className="text-zinc-500 dark:text-zinc-400 font-medium">
+                    Have questions or feedback? We'd love to hear from you.
+                  </p>
+                </div>
+
+                <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Email Address</p>
+                  <p className="text-lg font-bold text-zinc-800 dark:text-zinc-100">alamnishat456@gmail.com</p>
+                </div>
+
+                <button
+                  onClick={() => setShowContact(false)}
+                  className="w-full py-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl font-black hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
