@@ -15,7 +15,7 @@ import Navbar from './components/Navbar';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, X } from 'lucide-react';
 
-// Firebase Persistence এনাবল করা (ক্রোম এবং অন্যান্য ব্রাউজারে ডাটা সিঙ্ক ঠিক রাখার জন্য)
+// ১. ক্রোম এবং অন্যান্য ব্রাউজারে ডাটা সিঙ্ক ঠিক রাখার জন্য পারসিস্টেন্স এনাবল করা
 if (typeof window !== "undefined") {
   enableIndexedDbPersistence(db).catch((err) => {
     if (err.code === 'failed-precondition') {
@@ -37,7 +37,7 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // রিয়েল-টাইম ডাটা সিঙ্ক নিশ্চিত করতে onSnapshot ব্যবহার
+        // ২. রিয়েল-টাইম ডাটা সিঙ্ক নিশ্চিত করতে onSnapshot ব্যবহার
         const userDocRef = doc(db, 'users', currentUser.uid);
         const unsubscribeProfile = onSnapshot(userDocRef, (docSnap) => {
           if (docSnap.exists()) {
@@ -68,7 +68,7 @@ export default function App() {
     }
   }, [isDarkMode]);
 
-  // ইমেইল পাঠানোর ফাংশন
+  // ৩. ইমেইল পাঠানোর ফাংশন
   const handleEmailRedirect = () => {
     window.location.href = "mailto:alamnishat456@gmail.com?subject=Inquiry from BioSnap";
   };
@@ -144,7 +144,7 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Contact Us Modal */}
+      {/* ৪. কন্টাক্ট মডাল - সরাসরি ইমেইল করার সুবিধা সহ */}
       <AnimatePresence>
         {showContact && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -176,7 +176,7 @@ export default function App() {
                 <div className="space-y-2">
                   <h2 className="text-3xl font-black tracking-tighter">Get in Touch</h2>
                   <p className="text-zinc-500 dark:text-zinc-400 font-medium">
-                    Have questions about BioSnap? Reach out directly.
+                    Have questions or feedback? Reach out directly.
                   </p>
                 </div>
 
