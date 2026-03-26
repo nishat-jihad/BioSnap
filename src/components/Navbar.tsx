@@ -16,16 +16,21 @@ export default function Navbar({ user, isDarkMode, toggleTheme }: NavbarProps) {
         <a href="/" className="flex items-center gap-3 group transition-all">
           <motion.div 
             whileHover={{ scale: 1.1, rotate: 10 }}
-            className="w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center shadow-xl shadow-brand-primary/25 border border-white/20"
+            className="w-12 h-12 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center shadow-xl shadow-brand-primary/10 border border-white/20 overflow-hidden"
           >
-            {/* এখানে আপনি পরে লোগো ইমেজ বসাতে পারবেন */}
-            <span className="text-white font-black text-3xl">B</span>
+            {/* আপনার আপলোড করা biosnap.png লোগো হিসেবে বসানো হয়েছে */}
+            <img 
+              src="/biosnap.png" 
+              alt="BioSnap" 
+              className="w-full h-full object-contain p-1.5" 
+            />
           </motion.div>
-          <div className="flex flex-col -space-y-1">
+          
+          <div className="flex flex-col">
             <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">
               BioSnap
             </span>
-            {/* 'Home' লেখাটি এখান থেকে রিমুভ করা হয়েছে */}
+            {/* আপনার রিকোয়েস্ট অনুযায়ী 'Home' লেখাটি পুরোপুরি রিমুভ করা হয়েছে */}
           </div>
         </a>
 
