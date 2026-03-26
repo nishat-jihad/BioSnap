@@ -4,13 +4,14 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { UserProfile, LinkItem, Playlist } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, FolderPlus, FileText, Code } from 'lucide-react';
+import { Plus, Download, FolderPlus, Share2, FileText, Code } from 'lucide-react';
 import LinkRow from './LinkRow';
 import PlaylistRow from './PlaylistRow';
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 interface DashboardProps {
+  key?: string;
   user: User;
   profile: UserProfile;
 }
@@ -19,120 +20,316 @@ export default function Dashboard({ user, profile }: DashboardProps) {
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [isAddingPlaylist, setIsAddingPlaylist] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);
+
+  // Form states
   const [newLink, setNewLink] = useState({ title: '', subtitle: '', url: '' });
   const [newPlaylistName, setNewPlaylistName] = useState('');
 
   const handleAddLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     let finalUrl = newLink.url.trim();
-    if (finalUrl && !/^https?:\/\//i.test(finalUrl)) finalUrl = `https://${finalUrl}`;
-    const link: LinkItem = { id: crypto.randomUUID(), title: newLink.title, subtitle: newLink.subtitle, url: finalUrl, color: '#18181b', pinned: false };
+    if (finalUrl && !/^https?:\/\//i.test(finalUrl)) {
+      finalUrl = `https://${finalUrl}`;
+    }
+
+    const link: LinkItem = {
+      id: crypto.randomUUID(),
+      title: newLink.title,
+      subtitle: newLink.subtitle,
+      url: finalUrl,
+      color: '#18181b', // Default zinc-900
+      pinned: false
+    };
+
     const userDocRef = doc(db, 'users', user.uid);
-    await updateDoc(userDocRef, { links: [...profile.links, link] });
+    await updateDoc(userDocRef, {
+      links: [...profile.links, link]
+    });
     setIsAddingLink(false);
     setNewLink({ title: '', subtitle: '', url: '' });
   };
 
   const handleAddPlaylist = async (e: React.FormEvent) => {
     e.preventDefault();
-    const playlist: Playlist = { id: crypto.randomUUID(), name: newPlaylistName };
+    const playlist: Playlist = {
+      id: crypto.randomUUID(),
+      name: newPlaylistName
+    };
+
     const userDocRef = doc(db, 'users', user.uid);
-    await updateDoc(userDocRef, { playlists: [...profile.playlists, playlist] });
+    await updateDoc(userDocRef, {
+      playlists: [...profile.playlists, playlist]
+    });
     setIsAddingPlaylist(false);
     setNewPlaylistName('');
   };
 
-  // PDF Export Logic
   const exportPDF = async () => {
     if (!dashboardRef.current) return;
-    const exportActions = document.getElementById('export-actions');
     
     try {
-      if (exportActions) exportActions.style.visibility = 'hidden';
-      
-      // আপনার ডিভাইসের জন্য ছোট একটা ডিলে
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const canvas = await html2canvas(dashboardRef.current, {
-        scale: 1.5, // কোয়ালিটি এবং পারফরম্যান্স ব্যালেন্স
+      const element = dashboardRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
         useCORS: true,
-        backgroundColor: '#fafafa',
         logging: false,
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#fafafa',
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight
       });
 
-      // ইমেজকে PDF এ রূপান্তর
-      const imgData = canvas.toDataURL('image/jpeg', 0.9);
+      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${profile.username}-profile.pdf`);
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      
+      let heightLeft = pdfHeight;
+      let position = 0;
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`${profile.username}-biosnap.pdf`);
     } catch (error) {
-      console.error("Export Error:", error);
-    } finally {
-      if (exportActions) exportActions.style.visibility = 'visible';
+      console.error('PDF Export failed:', error);
     }
   };
 
   const exportHTML = () => {
-    const htmlContent = `<!DOCTYPE html><html><head><title>${profile.fullName}</title><script src="https://cdn.tailwindcss.com"></script></head><body class="p-10 bg-zinc-50 font-sans"><h1 class="text-3xl font-bold">${profile.fullName}</h1><p class="text-zinc-500 mb-8">@${profile.username}</p><div class="space-y-4">${profile.links.map(l => `<div class="p-4 bg-white rounded-xl shadow-sm border-l-4" style="border-color: ${l.color}"><h3 class="font-bold">${l.title}</h3><p class="text-sm text-zinc-500">${l.subtitle}</p><a href="${l.url}" class="text-blue-500 text-xs">${l.url}</a></div>`).join('')}</div></body></html>`;
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${profile.fullName} | BioSnap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #fafafa; font-family: sans-serif; }
+    </style>
+</head>
+<body class="p-8 max-w-2xl mx-auto">
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-2">${profile.fullName}</h1>
+        <p class="text-zinc-500">@${profile.username}</p>
+    </header>
+    <div class="space-y-4">
+        ${profile.links.filter(l => !l.playlistId).map(link => `
+            <a href="${link.url}" target="_blank" class="block p-4 rounded-2xl shadow-sm border border-zinc-100 bg-white hover:scale-[1.02] transition-transform" style="border-left: 8px solid ${link.color}">
+                <h3 class="font-bold">${link.title}</h3>
+                <p class="text-sm text-zinc-500">${link.subtitle}</p>
+            </a>
+        `).join('')}
+        
+        ${profile.playlists.map(p => `
+            <div class="mt-8">
+                <h2 class="text-xl font-bold mb-4">${p.name}</h2>
+                <div class="space-y-4">
+                    ${profile.links.filter(l => l.playlistId === p.id).map(link => `
+                        <a href="${link.url}" target="_blank" class="block p-4 rounded-2xl shadow-sm border border-zinc-100 bg-white hover:scale-[1.02] transition-transform" style="border-left: 8px solid ${link.color}">
+                            <h3 class="font-bold">${link.title}</h3>
+                            <p class="text-sm text-zinc-500">${link.subtitle}</p>
+                        </a>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('')}
+    </div>
+    <footer class="mt-20 text-center text-zinc-400 text-sm">
+        <p>Generated by <a href="${window.location.origin}" class="underline">BioSnap</a></p>
+    </footer>
+</body>
+</html>`;
+
     const blob = new Blob([htmlContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `${profile.username}.html`; a.click();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${profile.username}-biosnap.html`;
+    a.click();
   };
 
   return (
-    <div ref={dashboardRef} className="space-y-8 p-4 md:p-8 bg-zinc-50 dark:bg-zinc-950 min-h-screen">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight">Welcome, {profile.fullName.split(' ')[0]}</h1>
-          <p className="text-zinc-500">Manage your digital presence effortlessly.</p>
+    <div className="space-y-8">
+      <div ref={dashboardRef} className="space-y-8 bg-white dark:bg-zinc-950 p-8 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-900">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight">Welcome, {profile.fullName.split(' ')[0]}</h1>
+            <p className="text-zinc-500">Manage your digital presence effortlessly.</p>
+          </div>
+          <div className="flex items-center gap-2" data-html2canvas-ignore>
+            <button
+              onClick={exportPDF}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all text-sm font-semibold"
+            >
+              <FileText size={18} />
+              PDF
+            </button>
+            <button
+              onClick={exportHTML}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all text-sm font-semibold"
+            >
+              <Code size={18} />
+              HTML
+            </button>
+          </div>
         </div>
-        
-        <div id="export-actions" className="flex items-center gap-2">
-          <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all shadow-sm">
-            <FileText size={16} className="text-red-500" /> Export as PDF
-          </button>
-          <button onClick={exportHTML} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold transition-all shadow-sm">
-            <Code size={16} className="text-blue-500" /> Export as HTML
-          </button>
+
+        <div className="space-y-6">
+          {/* Pinned Links */}
+          {profile.links.some(l => l.pinned) && (
+            <div className="space-y-3">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400 px-2">Pinned</h2>
+              {profile.links.filter(l => l.pinned).map(link => (
+                <LinkRow key={link.id} link={link} user={user} profile={profile} />
+              ))}
+            </div>
+          )}
+
+          {/* Unorganized Links */}
+          <div className="space-y-3">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400 px-2">All Links</h2>
+            {profile.links.filter(l => !l.pinned && !l.playlistId).map(link => (
+              <LinkRow key={link.id} link={link} user={user} profile={profile} />
+            ))}
+          </div>
+
+          {/* Playlists */}
+          {profile.playlists.map(playlist => (
+            <PlaylistRow 
+              key={playlist.id} 
+              playlist={playlist} 
+              links={profile.links.filter(l => l.playlistId === playlist.id)}
+              user={user}
+              profile={profile}
+            />
+          ))}
         </div>
       </div>
 
       <div className="flex gap-4">
-        <button onClick={() => setIsAddingLink(true)} className="flex-1 flex items-center justify-center gap-2 py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-[1.01] transition-all shadow-lg">
-          <Plus size={24} /> Add URL
+        <button
+          onClick={() => setIsAddingLink(true)}
+          className="flex-1 flex items-center justify-center gap-2 py-5 bg-brand-primary text-white rounded-2xl font-black text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-brand-primary/20"
+        >
+          <Plus size={24} />
+          Add URL
         </button>
-        <button onClick={() => setIsAddingPlaylist(true)} className="px-8 flex items-center justify-center gap-2 py-5 bg-white dark:bg-zinc-900 border-2 border-zinc-100 rounded-2xl font-black text-lg hover:bg-zinc-50 transition-all">
-          <FolderPlus size={24} className="text-orange-500" /> New Playlist
+        <button
+          onClick={() => setIsAddingPlaylist(true)}
+          className="px-8 flex items-center justify-center gap-2 py-5 bg-white dark:bg-zinc-900 border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl font-black text-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-200/20 dark:shadow-none"
+        >
+          <FolderPlus size={24} className="text-brand-accent" />
+          <span className="hidden sm:inline">New Playlist</span>
         </button>
       </div>
 
       <AnimatePresence>
         {isAddingLink && (
-          <motion.form initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onSubmit={handleAddLink} className="p-8 bg-white dark:bg-zinc-900 rounded-[2rem] border border-zinc-200 shadow-xl space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Title" value={newLink.title} onChange={e => setNewLink({ ...newLink, title: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none" required />
-              <input type="text" placeholder="Subtitle" value={newLink.subtitle} onChange={e => setNewLink({ ...newLink, subtitle: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none" />
+          <motion.form
+            initial={{ height: 0, opacity: 0, scale: 0.95 }}
+            animate={{ height: 'auto', opacity: 1, scale: 1 }}
+            exit={{ height: 0, opacity: 0, scale: 0.95 }}
+            onSubmit={handleAddLink}
+            className="glass-card p-8 rounded-[2rem] space-y-5 overflow-hidden shadow-2xl shadow-brand-primary/5"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Title</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. My Portfolio"
+                  value={newLink.title}
+                  onChange={e => setNewLink({ ...newLink, title: e.target.value })}
+                  className="w-full px-5 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-brand-primary outline-none transition-all font-medium"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Subtitle</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Check out my work"
+                  value={newLink.subtitle}
+                  onChange={e => setNewLink({ ...newLink, subtitle: e.target.value })}
+                  className="w-full px-5 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-brand-primary outline-none transition-all font-medium"
+                />
+              </div>
             </div>
-            <input type="text" placeholder="URL" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none" required />
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">URL</label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. mywork.com"
+                value={newLink.url}
+                onChange={e => setNewLink({ ...newLink, url: e.target.value })}
+                className="w-full px-5 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-brand-primary outline-none transition-all font-medium"
+              />
+            </div>
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsAddingLink(false)}
+                className="px-6 py-3 text-sm font-black text-zinc-400 hover:text-zinc-600 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-8 py-3 bg-brand-primary text-white rounded-xl text-sm font-black shadow-lg shadow-brand-primary/20 hover:scale-105 transition-all"
+              >
+                Save Link
+              </button>
+            </div>
+          </motion.form>
+        )}
+
+        {isAddingPlaylist && (
+          <motion.form
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            onSubmit={handleAddPlaylist}
+            className="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 space-y-4 overflow-hidden"
+          >
+            <input
+              type="text"
+              required
+              placeholder="Playlist Name (e.g. Socials)"
+              value={newPlaylistName}
+              onChange={e => setNewPlaylistName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 border-none outline-none"
+            />
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setIsAddingLink(false)} className="px-4 py-2 text-zinc-400">Cancel</button>
-              <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Link</button>
+              <button
+                type="button"
+                onClick={() => setIsAddingPlaylist(false)}
+                className="px-4 py-2 text-sm font-semibold text-zinc-500"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl text-sm font-bold"
+              >
+                Create Playlist
+              </button>
             </div>
           </motion.form>
         )}
       </AnimatePresence>
-
-      <div className="space-y-6">
-        <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
-        {profile.links.filter(l => !l.playlistId).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
-        {profile.playlists.map(playlist => (
-          <PlaylistRow key={playlist.id} playlist={playlist} links={profile.links.filter(l => l.playlistId === playlist.id)} user={user} profile={profile} />
-        ))}
-      </div>
     </div>
   );
 }
