@@ -7,23 +7,29 @@ interface NavbarProps {
   user: User | null;
   isDarkMode: boolean;
   toggleTheme: () => void;
+  onContactClick: () => void; // App.tsx এর মডাল ওপেন করার জন্য এটি জরুরি
 }
 
-export default function Navbar({ user, isDarkMode, toggleTheme }: NavbarProps) {
+export default function Navbar({ user, isDarkMode, toggleTheme, onContactClick }: NavbarProps) {
   return (
     <nav className="sticky top-0 z-50 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+        
         {/* লোগো এবং ব্র্যান্ড নেম সেকশন */}
         <a href="/" className="flex items-center gap-3 group transition-all">
           <motion.div 
             whileHover={{ scale: 1.1, rotate: 10 }}
             className="w-12 h-12 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center shadow-xl shadow-brand-primary/10 border border-white/20 overflow-hidden"
           >
-            {/* আপনার আপলোড করা biosnap.png এখন এখানে লোগো হিসেবে কাজ করবে */}
+            {/* সরাসরি /biosnap.png পাথ ব্যবহার করা হয়েছে */}
             <img 
               src="/biosnap.png" 
               alt="BioSnap" 
-              className="w-full h-full object-contain p-1.5" 
+              className="w-full h-full object-contain p-1.5"
+              onError={(e) => {
+                // ইমেজ লোড না হলে কনসোলে এরর দেখাবে
+                console.error("Logo failed to load from /biosnap.png");
+              }}
             />
           </motion.div>
           
@@ -31,7 +37,6 @@ export default function Navbar({ user, isDarkMode, toggleTheme }: NavbarProps) {
             <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">
               BioSnap
             </span>
-            {/* এখানে আগে "Home" লেখা ছিল যা এখন রিমুভ করা হয়েছে */}
           </div>
         </a>
 
@@ -41,9 +46,14 @@ export default function Navbar({ user, isDarkMode, toggleTheme }: NavbarProps) {
             <a href="/" className="text-sm font-black uppercase tracking-widest hover:text-brand-primary transition-colors flex items-center gap-2">
               <Home size={16} className="text-brand-primary" /> Home
             </a>
-            <a href="mailto:alamnishat456@gmail.com" className="text-sm font-black uppercase tracking-widest hover:text-brand-secondary transition-colors flex items-center gap-2">
+            
+            {/* Contact বাটনে ক্লিক করলে App.tsx এর setShowContact(true) ট্রিগার হবে */}
+            <button 
+              onClick={onContactClick}
+              className="text-sm font-black uppercase tracking-widest hover:text-brand-secondary transition-colors flex items-center gap-2"
+            >
               <Mail size={16} className="text-brand-secondary" /> Contact
-            </a>
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
