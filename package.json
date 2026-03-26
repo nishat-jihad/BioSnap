@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plus, FolderPlus, FileText, Code } from 'lucide-react';
 import LinkRow from './LinkRow';
 import PlaylistRow from './PlaylistRow';
-import { jsPDF } from 'jspdf'; // Corrected Import
+// Vite এবং React 19 এর জন্য সঠিক ইম্পোর্ট পদ্ধতি
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 interface DashboardProps {
@@ -49,13 +50,14 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     const exportActions = document.getElementById('export-actions');
     
     try {
-      // বাটনগুলো হাইড করা
-      if (exportActions) exportActions.style.opacity = '0';
+      // বাটনগুলো ইনভিজিবল করা (display: none করলে লেআউট ভেঙে যায়)
+      if (exportActions) exportActions.style.visibility = 'hidden';
 
       const canvas = await html2canvas(dashboardRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#fafafa',
+        backgroundColor: '#fafafa',
+        logging: false
       });
 
       const imgData = canvas.toDataURL('image/png');
@@ -69,8 +71,8 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     } catch (error) {
       console.error("PDF Export failed:", error);
     } finally {
-      // বাটনগুলো আবার দৃশ্যমান করা
-      if (exportActions) exportActions.style.opacity = '1';
+      // বাটনগুলো আবার ফিরিয়ে আনা
+      if (exportActions) exportActions.style.visibility = 'visible';
     }
   };
 
@@ -89,7 +91,8 @@ export default function Dashboard({ user, profile }: DashboardProps) {
           <p className="text-zinc-500">Manage your digital presence effortlessly.</p>
         </div>
         
-        <div id="export-actions" className="flex items-center gap-2 transition-opacity duration-300">
+        {/* Export Buttons */}
+        <div id="export-actions" className="flex items-center gap-2">
           <button onClick={exportPDF} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 text-xs font-bold">
             <FileText size={16} className="text-red-500" /> Export as PDF
           </button>
