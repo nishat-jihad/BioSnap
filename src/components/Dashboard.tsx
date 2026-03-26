@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { User } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -23,7 +23,14 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     e.preventDefault();
     let finalUrl = newLink.url.trim();
     if (finalUrl && !/^https?:\/\//i.test(finalUrl)) finalUrl = `https://${finalUrl}`;
-    const link: LinkItem = { id: crypto.randomUUID(), title: newLink.title, subtitle: newLink.subtitle, url: finalUrl, color: '#18181b', pinned: false };
+    const link: LinkItem = { 
+      id: crypto.randomUUID(), 
+      title: newLink.title, 
+      subtitle: newLink.subtitle, 
+      url: finalUrl, 
+      color: '#18181b', 
+      pinned: false 
+    };
     const userDocRef = doc(db, 'users', user.uid);
     await updateDoc(userDocRef, { links: [...profile.links, link] });
     setIsAddingLink(false);
@@ -45,6 +52,12 @@ export default function Dashboard({ user, profile }: DashboardProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `${profile.username}.html`; a.click();
   };
+
+  // পিন করা লিংকগুলোকে সবার উপরে দেখানোর জন্য সর্টিং লজিক
+  const displayLinks = [...profile.links].sort((a, b) => {
+    if (a.pinned === b.pinned) return 0;
+    return a.pinned ? -1 : 1;
+  });
 
   return (
     <div className="space-y-8 p-4 md:p-8 bg-zinc-50 dark:bg-zinc-950 min-h-screen">
@@ -72,12 +85,18 @@ export default function Dashboard({ user, profile }: DashboardProps) {
 
       <AnimatePresence>
         {isAddingLink && (
-          <motion.form initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onSubmit={handleAddLink} className="p-8 bg-white dark:bg-zinc-900 rounded-[2rem] border border-zinc-200 dark:border-zinc-800 shadow-xl space-y-4">
+          <motion.form 
+            initial={{ opacity: 0, y: -10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: -10 }} 
+            onSubmit={handleAddLink} 
+            className="p-8 bg-white dark:bg-zinc-900 rounded-[2rem] border border-zinc-200 dark:border-zinc-800 shadow-xl space-y-4"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Title" value={newLink.title} onChange={e => setNewLink({ ...newLink, title: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none" required />
-              <input type="text" placeholder="Subtitle" value={newLink.subtitle} onChange={e => setNewLink({ ...newLink, subtitle: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none" />
+              <input type="text" placeholder="Title" value={newLink.title} onChange={e => setNewLink({ ...newLink, title: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
+              <input type="text" placeholder="Subtitle" value={newLink.subtitle} onChange={e => setNewLink({ ...newLink, subtitle: e.target.value })} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" />
             </div>
-            <input type="text" placeholder="URL" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none" required />
+            <input type="text" placeholder="URL" value={newLink.url} onChange={e => setNewLink({ ...newLink, url: e.target.value })} className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 outline-none border-2 border-transparent focus:border-indigo-500" required />
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setIsAddingLink(false)} className="px-4 py-2 text-zinc-400">Cancel</button>
               <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Link</button>
@@ -87,10 +106,27 @@ export default function Dashboard({ user, profile }: DashboardProps) {
       </AnimatePresence>
 
       <div className="space-y-6">
-        <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
-        {profile.links.filter(l => !l.playlistId).map(link => <LinkRow key={link.id} link={link} user={user} profile={profile} />)}
+        <div className="flex justify-between items-end px-2">
+          <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest">My Content</h2>
+          {/* ইউজারদের জন্য গাইডেন্স টেক্সট */}
+          <p className="text-[10px] text-zinc-400 italic">
+            Tip: Click title to open link • Click color dot to edit
+          </p>
+        </div>
+
+        {/* সর্ট করা লিস্ট রেন্ডার হচ্ছে */}
+        {displayLinks.filter(l => !l.playlistId).map(link => (
+          <LinkRow key={link.id} link={link} user={user} profile={profile} />
+        ))}
+        
         {profile.playlists.map(playlist => (
-          <PlaylistRow key={playlist.id} playlist={playlist} links={profile.links.filter(l => l.playlistId === playlist.id)} user={user} profile={profile} />
+          <PlaylistRow 
+            key={playlist.id} 
+            playlist={playlist} 
+            links={profile.links.filter(l => l.playlistId === playlist.id)} 
+            user={user} 
+            profile={profile} 
+          />
         ))}
       </div>
     </div>
