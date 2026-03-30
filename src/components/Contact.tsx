@@ -1,14 +1,19 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Mail, ArrowLeft, MessageSquare, Github, Globe } from 'lucide-react';
+import { Mail, ArrowLeft, MessageSquare, Github, Globe, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Contact() {
   const navigate = useNavigate();
   const email = "alamnishat456@gmail.com";
+  const phoneNumber = "+8801XXXXXXXXX"; // এখানে আপনার সঠিক মোবাইল নম্বরটি বসিয়ে দিন
 
   const handleEmailClick = () => {
     window.location.href = `mailto:${email}?subject=Feedback/Inquiry for BioSnap`;
+  };
+
+  const handlePhoneClick = () => {
+    window.location.href = `tel:${phoneNumber}`;
   };
 
   return (
@@ -58,6 +63,25 @@ export default function Contact() {
                 </div>
                 <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity text-indigo-600 font-bold text-sm">
                   Send Mail →
+                </div>
+              </button>
+
+              {/* Mobile Number Card */}
+              <button 
+                onClick={handlePhoneClick}
+                className="group flex items-center justify-between p-6 bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent hover:border-emerald-500 rounded-3xl transition-all text-left"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-white dark:bg-zinc-700 rounded-xl shadow-sm text-emerald-500">
+                    <Phone size={24} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Call Directly</p>
+                    <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{phoneNumber}</p>
+                  </div>
+                </div>
+                <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity text-emerald-600 font-bold text-sm">
+                  Call Now →
                 </div>
               </button>
 
