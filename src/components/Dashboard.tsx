@@ -15,9 +15,8 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
   const [searchQuery, setSearchQuery] = useState('');
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
-
-  // ✅ Back to Top visibility
   const [showBackToTop, setShowBackToTop] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setShowBackToTop(window.scrollY > 300);
     window.addEventListener('scroll', onScroll);
@@ -48,58 +47,42 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
   const isSearching = searchQuery.trim().length > 0;
 
   const searchResults = isSearching
-    ? allLinks
-        .map(link => {
-          const q = searchQuery.toLowerCase();
-          let score = 0;
-          if (link.title?.toLowerCase().includes(q)) score = 3;
-          else if (link.subtitle?.toLowerCase().includes(q)) score = 2;
-          else if (link.url?.toLowerCase().includes(q)) score = 1;
-          return { link, score };
-        })
-        .filter(x => x.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .map(x => x.link)
+    ? allLinks.map(link => {
+        const q = searchQuery.toLowerCase();
+        let score = 0;
+        if (link.title?.toLowerCase().includes(q)) score = 3;
+        else if (link.subtitle?.toLowerCase().includes(q)) score = 2;
+        else if (link.url?.toLowerCase().includes(q)) score = 1;
+        return { link, score };
+      }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).map(x => x.link)
     : [];
 
   const displayLinks = allLinks.filter(l => !l.playlistId);
 
-  // ✅ Drag & Drop
   const handleDragStart = (id: string) => setDraggedId(id);
   const handleDragOver = (e: React.DragEvent, id: string) => { e.preventDefault(); setDragOverId(id); };
   const handleDrop = async (targetId: string) => {
     if (!draggedId || draggedId === targetId) { setDraggedId(null); setDragOverId(null); return; }
     const links = [...(profile.links || [])];
-    const fromIndex = links.findIndex(l => l.id === draggedId);
-    const toIndex = links.findIndex(l => l.id === targetId);
-    const [moved] = links.splice(fromIndex, 1);
-    links.splice(toIndex, 0, moved);
+    const from = links.findIndex(l => l.id === draggedId);
+    const to = links.findIndex(l => l.id === targetId);
+    const [moved] = links.splice(from, 1);
+    links.splice(to, 0, moved);
     await updateDoc(doc(db, 'users', user.uid), { links });
-    setDraggedId(null);
-    setDragOverId(null);
+    setDraggedId(null); setDragOverId(null);
   };
   const handleDragEnd = () => { setDraggedId(null); setDragOverId(null); };
 
   return (
     <div className="space-y-8">
 
-      {/* ✅ Add URL + New Playlist buttons */}
+      {/* ✅ Add URL + New Playlist */}
       <div className="flex gap-4">
 
-        {/* ✅ Add URL — dark glowing style */}
+        {/* ✅ Add URL — neumorphic */}
         <button
           onClick={() => setActiveForm(activeForm === 'link' ? null : 'link')}
-          className="flex-1 flex items-center justify-center gap-2 py-5 rounded-2xl font-black text-lg transition-all"
-          style={{
-            background: activeForm === 'link'
-              ? '#383e4b'
-              : 'linear-gradient(173deg, #23272f 0%, #14161a 100%)',
-            color: 'white',
-            boxShadow: activeForm === 'link'
-              ? 'inset 5px 5px 10px #0e1013, inset -5px -5px 10px #383e4b'
-              : '10px 10px 20px #0e1013, -10px -10px 40px #383e4b',
-            border: '1px solid transparent',
-          }}
+          className={`add-url-btn flex-1 py-5 text-lg ${activeForm === 'link' ? 'active' : ''}`}
         >
           <Plus size={24} /> Add URL
         </button>
@@ -107,56 +90,48 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
         {/* ✅ New Playlist — neumorphic */}
         <button
           onClick={() => setActiveForm(activeForm === 'playlist' ? null : 'playlist')}
-          className="playlist-btn px-8 py-5 text-lg"
+          className={`playlist-btn px-8 py-5 text-lg ${activeForm === 'playlist' ? 'active' : ''}`}
         >
           <FolderPlus size={24} className="text-orange-500" /> New Playlist
         </button>
       </div>
 
       <AnimatePresence mode="wait">
+
+        {/* ✅ Add URL form — neumorphic inputs */}
         {activeForm === 'link' && (
           <motion.form key="link-form" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onSubmit={handleAddLink}
-            className="p-8 rounded-[2.5rem] shadow-2xl space-y-4"
-            style={{ background: 'linear-gradient(173deg, #23272f 0%, #14161a 100%)', boxShadow: '10px 10px 20px #0e1013, -10px -10px 40px #383e4b' }}
+            className="p-8 rounded-[2rem] space-y-4"
+            style={{ background: '#f0f0f0', boxShadow: '8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff' }}
           >
-            <h3 className="font-black text-xl italic text-yellow-400">Add New URL</h3>
+            <h3 className="font-black text-xl italic text-indigo-600">Add New URL</h3>
             <div className="space-y-3">
-              {/* ✅ Inputs with dark glowing style */}
-              {[
-                { placeholder: 'Title', value: newLink.title, onChange: (v: string) => setNewLink({...newLink, title: v}), type: 'text', required: true },
-                { placeholder: 'Subtitle (Optional)', value: newLink.subtitle, onChange: (v: string) => setNewLink({...newLink, subtitle: v}), type: 'text', required: false },
-                { placeholder: 'https://...', value: newLink.url, onChange: (v: string) => setNewLink({...newLink, url: v}), type: 'url', required: true },
-              ].map((field, i) => (
-                <div key={i} className="add-url-container">
-                  <input
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    value={field.value}
-                    onChange={e => field.onChange(e.target.value)}
-                    required={field.required}
-                  />
-                </div>
-              ))}
+              <input type="text" placeholder="Title" value={newLink.title} onChange={e => setNewLink({...newLink, title: e.target.value})} className="neu-input" required />
+              <input type="text" placeholder="Subtitle (Optional)" value={newLink.subtitle} onChange={e => setNewLink({...newLink, subtitle: e.target.value})} className="neu-input" />
+              <input type="url" placeholder="https://..." value={newLink.url} onChange={e => setNewLink({...newLink, url: e.target.value})} className="neu-input" required />
             </div>
-            <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setActiveForm(null)} className="px-4 py-2 font-bold text-zinc-400">Cancel</button>
-              <button type="submit" className="px-8 py-2 rounded-xl font-bold text-white"
-                style={{ background: '#ffd43b', color: '#14161a', boxShadow: '0px 0px 20px rgba(255,212,59,0.4)' }}>
+            <div className="flex justify-end gap-3">
+              <button type="button" onClick={() => setActiveForm(null)} className="neu-btn text-xs">Cancel</button>
+              <button type="submit" className="neu-btn text-xs" style={{ background: '#6366f1', color: 'white', boxShadow: '4px 4px 10px #4f52d9, -4px -4px 10px #7779ff' }}>
                 Save Link
               </button>
             </div>
           </motion.form>
         )}
 
+        {/* ✅ Playlist form — neumorphic */}
         {activeForm === 'playlist' && (
           <motion.form key="playlist-form" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onSubmit={handleAddPlaylist}
-            className="p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border-2 border-orange-500/20 shadow-2xl space-y-4">
+            className="p-8 rounded-[2rem] space-y-4"
+            style={{ background: '#f0f0f0', boxShadow: '8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff' }}
+          >
             <h3 className="font-black text-xl italic text-orange-600">Create Playlist</h3>
-            <input type="text" placeholder="Playlist Name..." value={newPlaylistName} onChange={e => setNewPlaylistName(e.target.value)}
-              className="w-full p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 border-2 border-transparent focus:border-orange-500 outline-none" required autoFocus />
-            <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setActiveForm(null)} className="px-4 py-2 font-bold text-zinc-400">Cancel</button>
-              <button type="submit" className="px-8 py-2 bg-orange-500 text-white rounded-xl font-bold shadow-md">Create</button>
+            <input type="text" placeholder="Playlist Name..." value={newPlaylistName} onChange={e => setNewPlaylistName(e.target.value)} className="neu-input" required autoFocus />
+            <div className="flex justify-end gap-3">
+              <button type="button" onClick={() => setActiveForm(null)} className="neu-btn text-xs">Cancel</button>
+              <button type="submit" className="neu-btn text-xs" style={{ background: '#f97316', color: 'white', boxShadow: '4px 4px 10px #d9620e, -4px -4px 10px #ff8534' }}>
+                Create
+              </button>
             </div>
           </motion.form>
         )}
@@ -165,7 +140,7 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
       <div className="space-y-6">
         <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">My Content</h2>
 
-        {/* ✅ Search bar — neumorphic style */}
+        {/* ✅ Search bar — neumorphic */}
         <div className="relative">
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 z-10" />
           <input
@@ -197,7 +172,7 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
           </>
         ) : (
           <>
-            {/* ✅ Drag & Drop enabled */}
+            {/* ✅ Drag & Drop */}
             {displayLinks.map(link => (
               <div
                 key={link.id}
@@ -225,7 +200,7 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
         )}
       </div>
 
-      {/* ✅ Back to Top button */}
+      {/* ✅ Back to Top */}
       <AnimatePresence>
         {showBackToTop && (
           <motion.button
@@ -242,7 +217,6 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
           </motion.button>
         )}
       </AnimatePresence>
-
     </div>
   );
 }
