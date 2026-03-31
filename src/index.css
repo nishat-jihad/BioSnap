@@ -7,7 +7,6 @@
   --color-brand-accent: #f59e0b;
 }
 
-/* Enable class-based dark mode in Tailwind 4 */
 @variant dark (&:where(.dark, .dark *));
 
 @layer base {
@@ -65,7 +64,7 @@
 }
 
 .back-to-top-btn .svgIcon path {
-  fill: #7a18e5;
+  fill: #000000;
 }
 
 .back-to-top-btn:hover {
@@ -85,12 +84,14 @@
   position: absolute;
   bottom: -20px;
   content: "Back to Top";
-  color: white;
+  color: #000000;
   font-size: 0px;
+  white-space: nowrap;
 }
 
 .back-to-top-btn:hover::before {
   font-size: 13px;
+  color: white;
   opacity: 1;
   bottom: unset;
   transition-duration: 0.3s;
@@ -120,7 +121,7 @@
   color: #bbb;
 }
 
-/* ✅ Neumorphic button (Contact, Logout) */
+/* ✅ Neumorphic button base (Contact, Logout, Home, Cancel) */
 .neu-btn {
   color: #090909;
   padding: 0.6em 1.4em;
@@ -144,7 +145,7 @@
   box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
 }
 
-/* ✅ New Playlist button (neumorphic with hover border) */
+/* ✅ New Playlist button */
 .playlist-btn {
   color: #090909;
   padding: 0.6em 1.4em;
@@ -171,41 +172,132 @@
   box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
 }
 
-/* ✅ Add URL dark input container */
-.add-url-container {
+/* ✅ Add URL neumorphic button */
+.add-url-btn {
+  color: #090909;
+  background: #e8e8e8;
+  cursor: pointer;
+  border: 1px solid #e8e8e8;
+  transition: all 0.3s;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+  font-weight: 900;
   display: flex;
-  background: white;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   border-radius: 1rem;
-  background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
-  box-shadow: 10px 10px 20px #0e1013, -10px -10px 40px #383e4b;
-  padding: 0.3rem;
-  gap: 0.3rem;
-  width: 100%;
 }
 
-.add-url-container input {
-  border-radius: 0.8rem;
-  background: #23272f;
-  box-shadow: inset 5px 5px 10px #0e1013, inset -5px -5px 10px #383e4b;
+.add-url-btn:active {
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+}
+
+.add-url-btn.active {
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+  color: #555;
+}
+
+/* ✅ Neumorphic input (for playlist name, add url fields) */
+.neu-input {
   width: 100%;
-  flex-basis: 100%;
-  padding: 1rem;
-  border: 1px solid transparent;
-  color: white;
-  transition: all 0.2s ease-in-out;
+  border: none;
   outline: none;
+  background: none;
   font-size: 15px;
+  color: #555;
+  padding: 13px 16px;
+  box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #ffffff;
+  border-radius: 16px;
+  transition: all 0.3s ease;
 }
 
-.add-url-container input::placeholder {
+.neu-input::placeholder {
   color: #888;
 }
 
-.add-url-container input:focus {
-  border: 1px solid #ffd43b;
-  box-shadow:
-    inset 0px 0px 10px rgba(255, 102, 0, 0.5),
-    inset 0px 0px 10px rgba(255, 212, 59, 0.5),
-    0px 0px 100px rgba(255, 212, 59, 0.5),
-    0px 0px 100px rgba(255, 102, 0, 0.5);
+/* ✅ Neumorphic link card */
+.neu-card {
+  background: #f0f0f0;
+  border-radius: 1rem;
+  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
+  border: none;
+  transition: all 0.3s;
+}
+
+.neu-card:hover {
+  box-shadow: 8px 8px 16px #c8c8c8, -8px -8px 16px #ffffff;
+}
+
+/* ✅ Dark/Light Toggle */
+.toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: .5em;
+  padding: .125em;
+  background-image: linear-gradient(to bottom, #d5d5d5, #e8e8e8);
+  box-shadow: 0 1px 1px rgb(255 255 255 / .6);
+  font-size: 1.2em;
+}
+
+.toggle-checkbox {
+  appearance: none;
+  position: absolute;
+  z-index: 1;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  font: inherit;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-radius: .375em;
+  width: 3em;
+  height: 1.5em;
+  background-color: #e8e8e8;
+  box-shadow: inset 0 0 .0625em .125em rgb(255 255 255 / .2), inset 0 .0625em .125em rgb(0 0 0 / .4);
+  transition: background-color .4s linear;
+}
+
+.toggle-checkbox:checked + .toggle-container {
+  background-color: #f3b519;
+}
+
+.toggle-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: .0625em;
+  border-radius: .3125em;
+  width: 1.375em;
+  height: 1.375em;
+  background-color: #e8e8e8;
+  box-shadow: inset 0 -.0625em .0625em .125em rgb(0 0 0 / .1), inset 0 -.125em .0625em rgb(0 0 0 / .2), inset 0 .1875em .0625em rgb(255 255 255 / .3), 0 .125em .125em rgb(0 0 0 / .5);
+  transition: left .4s;
+}
+
+.toggle-checkbox:checked + .toggle-container > .toggle-button {
+  left: 1.5625em;
+}
+
+.toggle-button-circles-container {
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
+  gap: .125em;
+  position: absolute;
+  margin: 0 auto;
+}
+
+.toggle-button-circle {
+  border-radius: 50%;
+  width: .125em;
+  height: .125em;
+  background-image: radial-gradient(circle at 50% 0, #f5f5f5, #c4c4c4);
 }
