@@ -20,7 +20,7 @@
 .mesh-gradient {
   background-color: #f8fafc;
   background-image:
-    radial-gradient(circle, rgba(99, 102, 241, 0.25) 1px, transparent 1px),
+    radial-gradient(circle, rgba(99, 102, 241, 0.22) 1px, transparent 1px),
     radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.06) 0, transparent 50%),
     radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.06) 0, transparent 50%),
     radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.06) 0, transparent 50%);
@@ -30,7 +30,7 @@
 .dark .mesh-gradient {
   background-color: #09090b;
   background-image:
-    radial-gradient(circle, rgba(99, 102, 241, 0.2) 1px, transparent 1px),
+    radial-gradient(circle, rgba(99, 102, 241, 0.18) 1px, transparent 1px),
     radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0, transparent 50%),
     radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.12) 0, transparent 50%),
     radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.12) 0, transparent 50%);
@@ -39,4 +39,173 @@
 
 .glass-card {
   @apply bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-white/20 dark:border-zinc-800/50;
+}
+
+/* ✅ Back to Top Button */
+.back-to-top-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(rgb(227, 203, 255), rgba(252, 235, 252, 1));
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+}
+
+.back-to-top-btn .svgIcon {
+  width: 12px;
+  transition-duration: 0.3s;
+}
+
+.back-to-top-btn .svgIcon path {
+  fill: #7a18e5;
+}
+
+.back-to-top-btn:hover {
+  width: 140px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: #7a18e5;
+  align-items: center;
+}
+
+.back-to-top-btn:hover .svgIcon {
+  transition-duration: 0.3s;
+  transform: translateY(-200%);
+}
+
+.back-to-top-btn::before {
+  position: absolute;
+  bottom: -20px;
+  content: "Back to Top";
+  color: white;
+  font-size: 0px;
+}
+
+.back-to-top-btn:hover::before {
+  font-size: 13px;
+  opacity: 1;
+  bottom: unset;
+  transition-duration: 0.3s;
+}
+
+/* ✅ Search Input (neumorphism) */
+.search-input {
+  max-width: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 15px;
+  color: #555;
+  padding: 13px 16px 13px 40px;
+  box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #ffffff;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: #888;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus::placeholder {
+  color: #bbb;
+}
+
+/* ✅ Neumorphic button (Contact, Logout) */
+.neu-btn {
+  color: #090909;
+  padding: 0.6em 1.4em;
+  font-size: 14px;
+  border-radius: 0.5em;
+  background: #e8e8e8;
+  cursor: pointer;
+  border: 1px solid #e8e8e8;
+  transition: all 0.3s;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.neu-btn:active {
+  color: #666;
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+}
+
+/* ✅ New Playlist button (neumorphic with hover border) */
+.playlist-btn {
+  color: #090909;
+  padding: 0.6em 1.4em;
+  font-size: 14px;
+  border-radius: 0.5em;
+  background: #e8e8e8;
+  cursor: pointer;
+  border: 1px solid #e8e8e8;
+  transition: all 0.3s;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.playlist-btn:hover {
+  border: 1px solid white;
+}
+
+.playlist-btn:active {
+  box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
+}
+
+/* ✅ Add URL dark input container */
+.add-url-container {
+  display: flex;
+  background: white;
+  border-radius: 1rem;
+  background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
+  box-shadow: 10px 10px 20px #0e1013, -10px -10px 40px #383e4b;
+  padding: 0.3rem;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.add-url-container input {
+  border-radius: 0.8rem;
+  background: #23272f;
+  box-shadow: inset 5px 5px 10px #0e1013, inset -5px -5px 10px #383e4b;
+  width: 100%;
+  flex-basis: 100%;
+  padding: 1rem;
+  border: 1px solid transparent;
+  color: white;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  font-size: 15px;
+}
+
+.add-url-container input::placeholder {
+  color: #888;
+}
+
+.add-url-container input:focus {
+  border: 1px solid #ffd43b;
+  box-shadow:
+    inset 0px 0px 10px rgba(255, 102, 0, 0.5),
+    inset 0px 0px 10px rgba(255, 212, 59, 0.5),
+    0px 0px 100px rgba(255, 212, 59, 0.5),
+    0px 0px 100px rgba(255, 102, 0, 0.5);
 }
