@@ -9,6 +9,7 @@ import Onboarding from './components/Onboarding';
 import Navbar from './components/Navbar';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, X } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 if (typeof window !== "undefined") {
   enableIndexedDbPersistence(db).catch(() => {});
@@ -54,6 +55,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen mesh-gradient text-zinc-900 dark:text-zinc-100 flex flex-col transition-colors">
+      <Analytics />
       <Navbar 
         user={user} 
         isDarkMode={isDarkMode} 
