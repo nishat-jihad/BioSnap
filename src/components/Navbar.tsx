@@ -1,6 +1,6 @@
 import { User, signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { Sun, Moon, LogOut, Home, Mail } from 'lucide-react';
+import { LogOut, Home, Mail } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface NavbarProps {
@@ -25,56 +25,56 @@ export default function Navbar({ user, isDarkMode, toggleTheme, onContactClick }
               src="/biosnap.png"
               alt="BioSnap"
               className="w-full h-full object-contain p-1.5"
-              onError={() => console.error("Logo failed to load from /biosnap.png")}
+              onError={() => console.error("Logo failed to load")}
             />
           </motion.div>
-          <div className="flex flex-col">
-            <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">
-              BioSnap
-            </span>
-          </div>
+          <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">
+            BioSnap
+          </span>
         </a>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Nav links */}
-          <div className="hidden md:flex items-center gap-4 mr-2">
-            <a
-              href="/"
-              className="text-sm font-black uppercase tracking-widest hover:text-brand-primary transition-colors flex items-center gap-2"
-            >
-              <Home size={16} className="text-brand-primary" /> Home
+          <div className="hidden md:flex items-center gap-3 mr-1">
+
+            {/* ✅ Home — neumorphic */}
+            <a href="/" className="neu-btn">
+              <Home size={15} className="text-brand-primary" /> Home
             </a>
 
-            {/* ✅ Contact — neumorphic button */}
-            <button
-              onClick={onContactClick}
-              className="neu-btn"
-            >
+            {/* ✅ Contact — neumorphic */}
+            <button onClick={onContactClick} className="neu-btn">
               <Mail size={15} className="text-brand-secondary" /> Contact
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Dark/Light toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-3 rounded-2xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-brand-primary/50 hover:text-brand-primary transition-all shadow-sm"
-              aria-label="Toggle theme"
-            >
-              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-
-            {/* ✅ Logout — neumorphic button */}
-            {user && (
-              <button
-                onClick={() => signOut(auth)}
-                className="neu-btn"
-              >
-                <LogOut size={15} />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
-            )}
+          {/* ✅ Dark/Light Toggle — custom style */}
+          <div className="toggle-wrapper" onClick={toggleTheme} title="Toggle theme">
+            <input
+              className="toggle-checkbox"
+              type="checkbox"
+              checked={isDarkMode}
+              onChange={toggleTheme}
+              aria-label="Toggle dark mode"
+            />
+            <div className="toggle-container">
+              <div className="toggle-button">
+                <div className="toggle-button-circles-container">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <div key={i} className="toggle-button-circle" />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* ✅ Logout — neumorphic */}
+          {user && (
+            <button onClick={() => signOut(auth)} className="neu-btn">
+              <LogOut size={15} />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
+          )}
         </div>
       </div>
     </nav>
