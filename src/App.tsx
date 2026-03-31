@@ -8,7 +8,7 @@ import Dashboard from './components/Dashboard';
 import Onboarding from './components/Onboarding';
 import Navbar from './components/Navbar';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, X } from 'lucide-react';
+import { Mail, X, Phone } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 
 if (typeof window !== "undefined") {
@@ -70,21 +70,32 @@ export default function App() {
       </main>
 
       {/* Dark Footer with Logo */}
-      <footer className="mt-auto py-10 bg-zinc-900 text-zinc-400 border-t border-white/5 text-center">
-        <div className="flex justify-center gap-8 mb-4">
-          <button onClick={() => window.scrollTo(0,0)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Home</button>
-          <button onClick={() => setShowContact(true)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Contact Us</button>
-        </div>
-        <p className="text-[10px] font-bold text-zinc-500 mb-4 tracking-tighter uppercase italic">alamnishat456@gmail.com</p>
-        
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center overflow-hidden">
-               <img src="/biosnap.png" alt="Logo" className="w-full h-full object-contain p-0.5" />
+      <footer className="mt-auto py-10 bg-zinc-900 text-zinc-400 border-t border-white/5">
+        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center md:items-start gap-8">
+
+          {/* ✅ LEFT: Logo + Description */}
+          <div className="flex flex-col items-center md:items-start gap-3 md:w-1/2">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                <img src="/biosnap.png" alt="Logo" className="w-full h-full object-contain p-0.5" />
+              </div>
+              <span className="font-black tracking-tighter text-zinc-100 uppercase">BioSnap</span>
             </div>
-            <span className="font-black tracking-tighter text-zinc-100 uppercase">BioSnap</span>
+            <p className="text-xs text-zinc-400 leading-relaxed text-center md:text-left max-w-xs">
+              Biosnap is a tiny website where you can keep your important links in one place. Its 100% safe and productivity booster. If you want to give me any advice, just contact me. Thanks for using Biosnap.
+            </p>
           </div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40">&copy; 2026 Crafted with passion.</p>
+
+          {/* RIGHT: Nav + Email + Copyright */}
+          <div className="flex flex-col items-center md:items-end gap-4 md:w-1/2">
+            <div className="flex gap-8">
+              <button onClick={() => window.scrollTo(0,0)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Home</button>
+              <button onClick={() => setShowContact(true)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Contact Us</button>
+            </div>
+            <p className="text-[10px] font-bold text-zinc-500 tracking-tighter uppercase italic">alamnishat456@gmail.com</p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40">&copy; 2026 Crafted with passion.</p>
+          </div>
+
         </div>
       </footer>
 
@@ -96,11 +107,20 @@ export default function App() {
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="relative w-full max-w-md bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-2xl border border-zinc-200 dark:border-zinc-800 text-center">
               <button onClick={() => setShowContact(false)} className="absolute top-6 right-6 p-2"><X size={20} className="text-zinc-400" /></button>
               <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><Mail size={32} /></div>
-              <h2 className="text-3xl font-black tracking-tighter mb-2">Get in Touch</h2>
-              <button onClick={() => window.location.href = "mailto:alamnishat456@gmail.com"} className="w-full bg-zinc-50 dark:bg-zinc-800 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-700 text-left hover:border-indigo-500 transition-all">
+              <h2 className="text-3xl font-black tracking-tighter mb-4">Get in Touch</h2>
+
+              {/* ✅ Email Card */}
+              <button onClick={() => window.location.href = "mailto:alamnishat456@gmail.com"} className="w-full bg-zinc-50 dark:bg-zinc-800 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-700 text-left hover:border-indigo-500 transition-all mb-3">
                 <p className="text-[10px] font-black uppercase text-zinc-400">Email Address</p>
                 <p className="text-lg font-bold text-zinc-800 dark:text-zinc-100">alamnishat456@gmail.com</p>
               </button>
+
+              {/* ✅ Phone Number Card */}
+              <button onClick={() => window.location.href = "tel:+8801854786431"} className="w-full bg-zinc-50 dark:bg-zinc-800 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-700 text-left hover:border-emerald-500 transition-all">
+                <p className="text-[10px] font-black uppercase text-zinc-400">Mobile Number</p>
+                <p className="text-lg font-bold text-zinc-800 dark:text-zinc-100">+8801854786431</p>
+              </button>
+
             </motion.div>
           </div>
         )}
