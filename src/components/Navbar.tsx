@@ -1,6 +1,6 @@
 import { User, signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { LogOut, Home, Mail } from 'lucide-react';
+import { LogOut, Home, Mail, Info } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface NavbarProps {
@@ -8,9 +8,10 @@ interface NavbarProps {
   isDarkMode: boolean;
   toggleTheme: () => void;
   onContactClick: () => void;
+  onAboutMeClick: () => void;
 }
 
-export default function Navbar({ user, isDarkMode, toggleTheme, onContactClick }: NavbarProps) {
+export default function Navbar({ user, isDarkMode, toggleTheme, onContactClick, onAboutMeClick }: NavbarProps) {
   return (
     <nav className="sticky top-0 z-50 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
@@ -41,6 +42,11 @@ export default function Navbar({ user, isDarkMode, toggleTheme, onContactClick }
             <a href="/" className="neu-btn">
               <Home size={15} className="text-brand-primary" /> Home
             </a>
+
+            {/* ✅ About Me — neumorphic */}
+            <button onClick={onAboutMeClick} className="neu-btn">
+              <Info size={15} className="text-brand-accent" /> About Me
+            </button>
 
             {/* ✅ Contact — neumorphic */}
             <button onClick={onContactClick} className="neu-btn">
