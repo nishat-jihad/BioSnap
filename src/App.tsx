@@ -73,7 +73,7 @@ export default function App() {
       <footer className="mt-auto py-10 bg-zinc-900 text-zinc-400 border-t border-white/5">
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center md:items-start gap-8">
 
-          {/* ✅ LEFT: Logo + Description */}
+          {/* LEFT: Logo + Description */}
           <div className="flex flex-col items-center md:items-start gap-3 md:w-1/2">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center overflow-hidden">
@@ -88,9 +88,20 @@ export default function App() {
 
           {/* RIGHT: Nav + Email + Copyright */}
           <div className="flex flex-col items-center md:items-end gap-4 md:w-1/2">
-            <div className="flex gap-8">
-              <button onClick={() => window.scrollTo(0,0)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Home</button>
-              <button onClick={() => setShowContact(true)} className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">Contact Us</button>
+            {/* ✅ Neumorphic dark footer buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => window.scrollTo(0, 0)}
+                className="neu-footer-btn"
+              >
+                Home
+              </button>
+              <button
+                onClick={() => setShowContact(true)}
+                className="neu-footer-btn"
+              >
+                Contact Us
+              </button>
             </div>
             <p className="text-[10px] font-bold text-zinc-500 tracking-tighter uppercase italic">alamnishat456@gmail.com</p>
             <p className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40">&copy; 2026 Crafted with passion.</p>
