@@ -7,8 +7,9 @@ import Landing from './components/Landing';
 import Dashboard from './components/Dashboard';
 import Onboarding from './components/Onboarding';
 import Navbar from './components/Navbar';
+import AboutMe from './components/AboutMe';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, X, Phone } from 'lucide-react';
+import { Mail, X } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 
 if (typeof window !== "undefined") {
@@ -21,6 +22,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [showAboutMe, setShowAboutMe] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -60,7 +62,8 @@ export default function App() {
         user={user} 
         isDarkMode={isDarkMode} 
         toggleTheme={() => setIsDarkMode(!isDarkMode)} 
-        onContactClick={() => setShowContact(true)} 
+        onContactClick={() => setShowContact(true)}
+        onAboutMeClick={() => setShowAboutMe(true)}
       />
       
       <main className="container mx-auto px-4 py-12 max-w-4xl flex-grow">
@@ -128,6 +131,13 @@ export default function App() {
               
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* About Me Modal */}
+      <AnimatePresence>
+        {showAboutMe && (
+          <AboutMe onClose={() => setShowAboutMe(false)} />
         )}
       </AnimatePresence>
     </div>
