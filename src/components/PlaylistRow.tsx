@@ -113,27 +113,48 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
       </div>
 
       <AnimatePresence>
+        {/* ✅ Neumorphic Inline Add Form */}
         {isAdding && (
           <motion.form
             initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             onSubmit={handleInlineAdd}
-            className="mx-4 p-4 bg-white/30 dark:bg-zinc-800/30 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-700 space-y-3"
+            className="mx-4 p-5 rounded-2xl space-y-3"
+            style={{ background: '#f0f0f0', boxShadow: '8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff' }}
           >
+            {/* ✅ Title input — neumorphic search style */}
             <input
-              type="text" placeholder="Title..." value={inlineLink.title}
+              type="text"
+              placeholder="Title..."
+              value={inlineLink.title}
               onChange={e => setInlineLink({...inlineLink, title: e.target.value})}
-              className="w-full p-2 bg-transparent border-b border-zinc-200 dark:border-zinc-700 outline-none text-sm"
+              className="neu-inline-input"
               required
             />
+            {/* ✅ URL input — neumorphic search style */}
             <input
-              type="url" placeholder="https://..." value={inlineLink.url}
+              type="url"
+              placeholder="https://..."
+              value={inlineLink.url}
               onChange={e => setInlineLink({...inlineLink, url: e.target.value})}
-              className="w-full p-2 bg-transparent border-b border-zinc-200 dark:border-zinc-700 outline-none text-sm"
+              className="neu-inline-input"
               required
             />
-            <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setIsAdding(false)} className="text-[10px] font-bold uppercase text-zinc-400">Cancel</button>
-              <button type="submit" className="px-3 py-1 bg-indigo-500 text-white rounded-lg text-[10px] font-bold uppercase">Add</button>
+            <div className="flex justify-end gap-2 pt-1">
+              {/* ✅ Neumorphic Cancel button */}
+              <button
+                type="button"
+                onClick={() => setIsAdding(false)}
+                className="neu-inline-cancel-btn"
+              >
+                CANCEL
+              </button>
+              {/* ✅ Neumorphic Add button */}
+              <button
+                type="submit"
+                className="neu-inline-add-btn"
+              >
+                ADD
+              </button>
             </div>
           </motion.form>
         )}
