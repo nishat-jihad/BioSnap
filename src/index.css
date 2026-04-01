@@ -538,3 +538,26 @@
   transition-duration: 0.5s;
   transform: rotate(160deg);
 }
+
+/* ✅ Neumorphic Playlist Action Buttons (+ and ...) */
+.neu-playlist-action-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #e8e8e8;
+  border: 1px solid #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 5px 5px 10px #c5c5c5, -5px -5px 10px #ffffff;
+}
+
+.neu-playlist-action-btn:hover {
+  box-shadow: 6px 6px 12px #c0c0c0, -6px -6px 12px #ffffff;
+}
+
+.neu-playlist-action-btn:active {
+  box-shadow: inset 4px 4px 8px #c5c5c5, inset -4px -4px 8px #ffffff;
+}
