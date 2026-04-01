@@ -565,8 +565,8 @@
 /* ✅ Animated Copy Button (Neumorphic) */
 .copy-btn {
   background: #e8e8e8;
-  width: 105px;
-  height: 34px;
+  width: 90px;
+  height: 32px;
   border: none;
   border-radius: 10px;
   font-weight: 600;
@@ -576,31 +576,23 @@
   transition-duration: 700ms;
   position: relative;
   box-shadow: 5px 5px 10px #c5c5c5, -5px -5px 10px #ffffff;
-  flex-shrink: 0;
 }
 
 .copy-btn span:first-child {
   color: #6366f1;
   position: absolute;
-  top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 5px;
   white-space: nowrap;
-  width: 100%;
-  padding: 0 8px;
 }
 
 .copy-btn span:last-child {
   position: absolute;
   color: #ffffff;
   opacity: 0;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(100%);
+  transform: translateY(100%) translateX(-50%);
   height: 14px;
   line-height: 13px;
   white-space: nowrap;
@@ -608,8 +600,8 @@
 
 .copy-btn.copied {
   background: #6366f1;
-  width: 105px;
-  height: 34px;
+  width: 90px;
+  height: 32px;
   box-shadow: inset 4px 4px 8px #4547c4, inset -4px -4px 8px #8183ff;
   transition-delay: 100ms;
   transition-duration: 500ms;
@@ -721,7 +713,10 @@
   box-shadow: inset 3px 3px 8px #111111, inset -3px -3px 8px #3a3a3a;
 }
 
-
+/* ✅ Fix Copy Button width so text shows fully */
+.copy-btn {
+  width: 105px !important;
+}
 
 /* ✅ Neumorphic Blue Pin Button */
 .neu-pin-btn {
@@ -753,5 +748,116 @@
 
 .neu-pin-btn--active:hover {
   box-shadow: 5px 5px 12px #9fa0ec, -3px -3px 10px #ffffff;
+  color: white;
+}
+
+/* ✅ Edit CTA Button */
+.cta {
+  position: relative;
+  padding: 12px 18px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.cta:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  transition: all 0.3s ease;
+}
+
+.cta span {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #234567;
+}
+
+.cta svg {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: #234567;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+}
+
+.cta:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+
+.cta:hover svg {
+  transform: translateX(0);
+}
+
+.cta:active {
+  transform: scale(0.95);
+}
+
+/* ✅ Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.page-item .page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: #e8e8e8;
+  border: 1px solid #e8e8e8;
+  color: #444;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 4px 4px 8px #c5c5c5, -4px -4px 8px #ffffff;
+  transition: all 0.2s ease;
+}
+
+.page-item .page-link:hover {
+  box-shadow: 5px 5px 10px #c0c0c0, -5px -5px 10px #ffffff;
+  color: #6366f1;
+}
+
+.page-item.active .page-link {
+  background: linear-gradient(145deg, #7577f3, #5456d4);
+  color: white;
+  border-color: transparent;
+  box-shadow: 4px 4px 10px #a8a9f0, -3px -3px 8px #ffffff;
+}
+
+.page-item.disabled .page-link {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.page-item.active .page-link:hover {
   color: white;
 }
