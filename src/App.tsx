@@ -125,13 +125,7 @@ export default function App() {
                 <p className="text-[10px] font-black uppercase text-zinc-400">Email Address</p>
                 <p className="text-lg font-bold text-zinc-800 dark:text-zinc-100">alamnishat456@gmail.com</p>
               </button>
-
-              {/* ✅ Phone Number Card */}
-              <button onClick={() => window.location.href = "tel:+8801854786431"} className="w-full bg-zinc-50 dark:bg-zinc-800 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-700 text-left hover:border-emerald-500 transition-all">
-                <p className="text-[10px] font-black uppercase text-zinc-400">Mobile Number</p>
-                <p className="text-lg font-bold text-zinc-800 dark:text-zinc-100">+8801854786431</p>
-              </button>
-
+              
             </motion.div>
           </div>
         )}
