@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Contact() {
   const navigate = useNavigate();
   const email = "alamnishat456@gmail.com";
-  const phoneNumber = "+8801XXXXXXXXX"; // এখানে আপনার সঠিক মোবাইল নম্বরটি বসিয়ে দিন
+  const phoneNumber = "+8801XXXXXXXXX"; // এখানে আপনার সঠিক মোবাইল নম্বরটি বসিয়ে দিন
 
   const handleEmailClick = () => {
     window.location.href = `mailto:${email}?subject=Feedback/Inquiry for BioSnap`;
@@ -18,10 +18,11 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6 md:p-12 flex items-center justify-center">
+      {/* ✅ Neumorphic main container */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-2xl w-full bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-zinc-200 dark:border-zinc-800 shadow-2xl overflow-hidden"
+        className="max-w-2xl w-full neu-contact-card overflow-hidden"
       >
         <div className="p-8 md:p-12">
           {/* Back Button */}
@@ -33,7 +34,8 @@ export default function Contact() {
           </button>
 
           <div className="space-y-6">
-            <div className="inline-flex p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl text-indigo-600 dark:text-indigo-400">
+            {/* ✅ Neumorphic icon box */}
+            <div className="inline-flex p-4 neu-icon-box rounded-2xl text-indigo-600 dark:text-indigo-400">
               <MessageSquare size={32} />
             </div>
             
@@ -47,13 +49,13 @@ export default function Contact() {
             </p>
 
             <div className="grid grid-cols-1 gap-4 pt-4">
-              {/* Primary Email Card */}
+              {/* ✅ Neumorphic Email Card */}
               <button 
                 onClick={handleEmailClick}
-                className="group flex items-center justify-between p-6 bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent hover:border-indigo-500 rounded-3xl transition-all text-left"
+                className="neu-contact-item group flex items-center justify-between p-6 rounded-3xl transition-all text-left"
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-white dark:bg-zinc-700 rounded-xl shadow-sm text-red-500">
+                  <div className="p-3 neu-contact-icon-wrap rounded-xl text-red-500">
                     <Mail size={24} />
                   </div>
                   <div>
@@ -66,13 +68,13 @@ export default function Contact() {
                 </div>
               </button>
 
-              {/* Mobile Number Card */}
+              {/* ✅ Neumorphic Phone Card */}
               <button 
                 onClick={handlePhoneClick}
-                className="group flex items-center justify-between p-6 bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent hover:border-emerald-500 rounded-3xl transition-all text-left"
+                className="neu-contact-item group flex items-center justify-between p-6 rounded-3xl transition-all text-left"
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-white dark:bg-zinc-700 rounded-xl shadow-sm text-emerald-500">
+                  <div className="p-3 neu-contact-icon-wrap rounded-xl text-emerald-500">
                     <Phone size={24} />
                   </div>
                   <div>
@@ -85,17 +87,18 @@ export default function Contact() {
                 </div>
               </button>
 
+              {/* ✅ Neumorphic GitHub & Portfolio buttons */}
               <div className="flex gap-4">
                 <a 
                   href="https://github.com/nishat-jihad" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 p-4 bg-zinc-900 text-white rounded-2xl hover:bg-black transition-colors font-bold"
+                  className="flex-1 flex items-center justify-center gap-2 p-4 neu-contact-dark-btn rounded-2xl font-bold"
                 >
                   <Github size={20} /> GitHub
                 </a>
                 <button 
-                  className="flex-1 flex items-center justify-center gap-2 p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl hover:bg-zinc-50 transition-colors font-bold text-zinc-900 dark:text-zinc-100"
+                  className="flex-1 flex items-center justify-center gap-2 p-4 neu-contact-light-btn rounded-2xl font-bold text-zinc-900 dark:text-zinc-100"
                 >
                   <Globe size={20} /> Portfolio
                 </button>
@@ -104,7 +107,7 @@ export default function Contact() {
           </div>
         </div>
 
-        <div className="bg-zinc-50 dark:bg-zinc-800/30 p-6 text-center border-t border-zinc-100 dark:border-zinc-800">
+        <div className="neu-contact-footer p-6 text-center">
           <p className="text-sm text-zinc-400 font-medium">
             Project BioSnap • Created for Students by Nishat
           </p>
