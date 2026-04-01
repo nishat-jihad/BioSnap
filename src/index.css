@@ -561,3 +561,63 @@
 .neu-playlist-action-btn:active {
   box-shadow: inset 4px 4px 8px #c5c5c5, inset -4px -4px 8px #ffffff;
 }
+
+/* ✅ Animated Copy Button (Neumorphic) */
+.copy-btn {
+  background: #e8e8e8;
+  width: 90px;
+  height: 32px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  overflow: hidden;
+  transition-duration: 700ms;
+  position: relative;
+  box-shadow: 5px 5px 10px #c5c5c5, -5px -5px 10px #ffffff;
+}
+
+.copy-btn span:first-child {
+  color: #6366f1;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.copy-btn span:last-child {
+  position: absolute;
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(100%) translateX(-50%);
+  height: 14px;
+  line-height: 13px;
+  white-space: nowrap;
+}
+
+.copy-btn.copied {
+  background: #6366f1;
+  width: 90px;
+  height: 32px;
+  box-shadow: inset 4px 4px 8px #4547c4, inset -4px -4px 8px #8183ff;
+  transition-delay: 100ms;
+  transition-duration: 500ms;
+}
+
+.copy-btn.copied span:first-child {
+  color: #c7c8fb;
+  transform: translateX(-50%) translateY(-150%);
+  opacity: 0;
+  transition-duration: 500ms;
+}
+
+.copy-btn.copied span:last-child {
+  transform: translateX(-50%) translateY(-50%);
+  opacity: 1;
+  transition-delay: 300ms;
+  transition-duration: 500ms;
+  color: #ffffff;
+}
