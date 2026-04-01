@@ -57,8 +57,8 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
     <div className="neu-card p-4">
       <div className="flex items-center gap-4">
 
-        {/* Favicon / Color picker — ✅ "Color" label removed */}
-        <div className="relative flex flex-col items-center gap-1">
+        {/* Favicon / Color picker */}
+        <div className="relative">
           <div className="relative w-8 h-8">
             {faviconUrl && !faviconError ? (
               <img
@@ -68,10 +68,7 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
                 className="w-8 h-8 rounded-lg object-contain bg-zinc-100 p-1"
               />
             ) : (
-              <div
-                className="w-8 h-8 rounded-lg"
-                style={{ backgroundColor: link.color }}
-              />
+              <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: link.color }} />
             )}
             <input
               type="color"
@@ -104,9 +101,9 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
 
-          {/* ✅ Animated Neumorphic Copy Button */}
+          {/* ✅ Animated Neumorphic Copy Button — fixed width so text doesn't cut */}
           <button
             onClick={handleCopy}
             className={`copy-btn ${copied ? 'copied' : ''}`}
@@ -121,21 +118,17 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
             <span>Copied ✓</span>
           </button>
 
-          {/* Pin Button */}
+          {/* ✅ Neumorphic Blue Pin Button */}
           <button
             onClick={togglePin}
-            className={`p-2 rounded-xl transition-colors ${link.pinned ? 'text-orange-500' : 'text-zinc-400 hover:text-zinc-700'}`}
+            className={`neu-pin-btn ${link.pinned ? 'neu-pin-btn--active' : ''}`}
             title={link.pinned ? 'Unpin' : 'Pin to top'}
           >
-            <Pin size={18} />
+            <Pin size={16} />
           </button>
 
           {/* ✅ Animated Trash Delete Button */}
-          <button
-            onClick={deleteLink}
-            className="trash-btn"
-            title="Delete"
-          >
+          <button onClick={deleteLink} className="trash-btn" title="Delete">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" className="trash-icon bin-top">
               <g clipPath="url(#clip0_35_24)">
                 <path fill="black" d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"></path>
