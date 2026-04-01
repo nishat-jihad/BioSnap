@@ -58,7 +58,7 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
     <div className="neu-card p-4">
       <div className="flex items-center gap-4">
 
-        {/* Favicon / Color picker */}
+        {/* Favicon / Color picker — ✅ "Color" label removed */}
         <div className="relative flex flex-col items-center gap-1">
           <div className="relative w-8 h-8">
             {faviconUrl && !faviconError ? (
@@ -82,7 +82,7 @@ export default function LinkRow({ link, user, profile }: LinkRowProps) {
               title="Change color"
             />
           </div>
-          <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-tighter">Color</span>
+          {/* ✅ "Color" text label removed */}
         </div>
 
         {/* Content */}
