@@ -435,3 +435,106 @@
   border-top: 1px solid #e0e0e0;
   box-shadow: inset 0 4px 8px #d1d1d1;
 }
+
+/* ✅ Animated Delete Button */
+.delete-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: .3s;
+  overflow: hidden;
+  position: relative;
+}
+
+.delete-btn .delete-icon {
+  width: 12px;
+  transition-duration: .3s;
+}
+
+.delete-btn .delete-icon path {
+  fill: white;
+}
+
+.delete-btn:hover {
+  width: 110px;
+  border-radius: 50px;
+  transition-duration: .3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+}
+
+.delete-btn:hover .delete-icon {
+  width: 40px;
+  transition-duration: .3s;
+  transform: translateY(55%);
+}
+
+.delete-btn::before {
+  position: absolute;
+  top: -20px;
+  content: "Delete";
+  color: white;
+  transition-duration: .3s;
+  font-size: 2px;
+}
+
+.delete-btn:hover::before {
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(30px);
+  transition-duration: .3s;
+}
+
+/* ✅ Animated Delete (Trash) Button */
+.trash-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  gap: 2px;
+  padding: 0;
+}
+
+.trash-btn .trash-icon {
+  width: 11px;
+  transition-duration: 0.3s;
+}
+
+.trash-btn .trash-icon path {
+  fill: white;
+}
+
+.trash-btn:hover {
+  transition-duration: 0.3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+  gap: 0;
+}
+
+.trash-btn .bin-top {
+  transform-origin: bottom right;
+}
+
+.trash-btn:hover .bin-top {
+  transition-duration: 0.5s;
+  transform: rotate(160deg);
+}
