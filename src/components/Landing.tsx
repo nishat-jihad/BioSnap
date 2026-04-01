@@ -57,9 +57,10 @@ export default function Landing() {
       </div>
 
       <div className="glass-card p-10 rounded-[2.5rem] shadow-2xl shadow-brand-primary/10">
+        {/* ✅ Neumorphic Google Button */}
         <button
           onClick={handleGoogleSignIn}
-          className="w-full flex items-center justify-center gap-3 py-4 px-4 rounded-2xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:border-brand-primary transition-all font-bold mb-8 shadow-sm"
+          className="w-full flex items-center justify-center gap-3 py-4 px-4 font-bold mb-8 neu-google-btn"
         >
           <Chrome size={22} className="text-brand-primary" />
           Continue with Google
@@ -77,14 +78,15 @@ export default function Landing() {
         <form onSubmit={handleEmailAuth} className="space-y-5">
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-2">Email</label>
+            {/* ✅ Neumorphic Email Input (search bar style) */}
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-primary" size={20} />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-primary z-10" size={20} />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-brand-primary outline-none transition-all font-medium"
+                className="neu-search-input"
                 placeholder="hello@biosnap.me"
               />
             </div>
@@ -92,14 +94,15 @@ export default function Landing() {
 
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-2">Password</label>
+            {/* ✅ Neumorphic Password Input (search bar style) */}
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-secondary" size={20} />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-secondary z-10" size={20} />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-brand-secondary outline-none transition-all font-medium"
+                className="neu-search-input"
                 placeholder="••••••••"
               />
             </div>
@@ -115,9 +118,10 @@ export default function Landing() {
             </motion.p>
           )}
 
+          {/* ✅ Neumorphic Get Started Button */}
           <button
             type="submit"
-            className="w-full py-5 bg-brand-primary text-white rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-brand-primary/20"
+            className="w-full py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all neu-primary-btn"
           >
             Get Started
             <ArrowRight size={22} />
