@@ -18,7 +18,7 @@ export default function Dashboard({ user, profile }: { user: User; profile: User
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShowBackToTop(window.scrollY > 300);
+    const onScroll = () => setShowBackToTop(window.scrollY > 150);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
