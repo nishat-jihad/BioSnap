@@ -51,7 +51,7 @@ export default function AboutMe({ onClose }: AboutMeProps) {
               Introduction
             </h2>
             <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Hi, I&apos;m Nishat Alam, a student and a dedicated coder. I have a passion for
+              Hi, I am Nishat Alam, a student and a dedicated coder. I have a passion for
               creating simple, practical tools that help people manage their digital life more
               efficiently.
             </p>
@@ -112,6 +112,7 @@ export default function AboutMe({ onClose }: AboutMeProps) {
               .
             </p>
           </div>
+
         </div>
       </motion.div>
     </div>
