@@ -30,7 +30,6 @@ export default function AboutMe({ onClose }: AboutMeProps) {
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
         className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl border border-zinc-200 dark:border-zinc-800"
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 z-10"
@@ -40,12 +39,11 @@ export default function AboutMe({ onClose }: AboutMeProps) {
         </button>
 
         <div className="p-10">
-          {/* Main Title */}
+
           <h1 className="text-5xl font-black tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">
             About Me
           </h1>
 
-          {/* Introduction */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">
               Introduction
@@ -57,7 +55,6 @@ export default function AboutMe({ onClose }: AboutMeProps) {
             </p>
           </div>
 
-          {/* About the Website */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">
               About the Website
@@ -70,7 +67,6 @@ export default function AboutMe({ onClose }: AboutMeProps) {
             </p>
           </div>
 
-          {/* Key Features */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mb-3">
               Key Features
@@ -85,7 +81,6 @@ export default function AboutMe({ onClose }: AboutMeProps) {
             </ul>
           </div>
 
-          {/* Privacy and Security */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">
               Privacy and Security
@@ -96,20 +91,12 @@ export default function AboutMe({ onClose }: AboutMeProps) {
             </p>
           </div>
 
-          {/* Contact */}
           <div>
             <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">
               Contact
             </h2>
             <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              For feedback, suggestions, or inquiries, you can reach me at{' '}
-              
-                href="mailto:alamnishat456@gmail.com"
-                className="font-semibold text-brand-primary hover:underline"
-              >
-                alamnishat456@gmail.com
-              </a>
-              .
+              For feedback, suggestions, or inquiries, you can reach me at alamnishat456@gmail.com
             </p>
           </div>
 
