@@ -1,31 +1,24 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Mail, ArrowLeft, MessageSquare, Github, Globe, Phone } from 'lucide-react';
+import { Mail, ArrowLeft, MessageSquare, Github, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Contact() {
   const navigate = useNavigate();
   const email = "alamnishat456@gmail.com";
-  const phoneNumber = "+8801XXXXXXXXX"; // এখানে আপনার সঠিক মোবাইল নম্বরটি বসিয়ে দিন
 
   const handleEmailClick = () => {
     window.location.href = `mailto:${email}?subject=Feedback/Inquiry for BioSnap`;
   };
 
-  const handlePhoneClick = () => {
-    window.location.href = `tel:${phoneNumber}`;
-  };
-
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6 md:p-12 flex items-center justify-center">
-      {/* ✅ Neumorphic main container */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-2xl w-full neu-contact-card overflow-hidden"
       >
         <div className="p-8 md:p-12">
-          {/* Back Button */}
           <button 
             onClick={() => navigate(-1)}
             className="mb-8 flex items-center gap-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors font-bold text-sm"
@@ -34,7 +27,6 @@ export default function Contact() {
           </button>
 
           <div className="space-y-6">
-            {/* ✅ Neumorphic icon box */}
             <div className="inline-flex p-4 neu-icon-box rounded-2xl text-indigo-600 dark:text-indigo-400">
               <MessageSquare size={32} />
             </div>
@@ -49,7 +41,7 @@ export default function Contact() {
             </p>
 
             <div className="grid grid-cols-1 gap-4 pt-4">
-              {/* ✅ Neumorphic Email Card */}
+              {/* Email Card */}
               <button 
                 onClick={handleEmailClick}
                 className="neu-contact-item group flex items-center justify-between p-6 rounded-3xl transition-all text-left"
@@ -68,26 +60,7 @@ export default function Contact() {
                 </div>
               </button>
 
-              {/* ✅ Neumorphic Phone Card */}
-              <button 
-                onClick={handlePhoneClick}
-                className="neu-contact-item group flex items-center justify-between p-6 rounded-3xl transition-all text-left"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-3 neu-contact-icon-wrap rounded-xl text-emerald-500">
-                    <Phone size={24} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Call Directly</p>
-                    <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{phoneNumber}</p>
-                  </div>
-                </div>
-                <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity text-emerald-600 font-bold text-sm">
-                  Call Now →
-                </div>
-              </button>
-
-              {/* ✅ Neumorphic GitHub & Portfolio buttons */}
+              {/* GitHub & Portfolio */}
               <div className="flex gap-4">
                 <a 
                   href="https://github.com/nishat-jihad" 
