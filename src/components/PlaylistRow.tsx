@@ -56,9 +56,10 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between group">
+        {/* ✅ Neumorphic Playlist Card */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex-1 flex items-center gap-3 p-4 glass-card hover:bg-white/40 dark:hover:bg-zinc-800/40 transition-all text-left rounded-2xl border border-white/10"
+          className="flex-1 flex items-center gap-3 p-4 neu-card transition-all text-left rounded-2xl"
         >
           <div className="p-2.5 bg-indigo-500/10 rounded-xl text-indigo-500 shadow-inner">
             <Folder size={20} />
