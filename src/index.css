@@ -364,3 +364,74 @@
   box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.2), inset -4px -4px 10px rgba(255, 255, 255, 0.15);
   transform: scale(0.99);
 }
+
+/* ✅ Neumorphic Contact Page */
+.neu-contact-card {
+  background: #f0f0f0;
+  border-radius: 2.5rem;
+  box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
+}
+
+.neu-contact-item {
+  background: #f0f0f0;
+  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+.neu-contact-item:hover {
+  box-shadow: 8px 8px 16px #cacaca, -8px -8px 16px #ffffff;
+}
+
+.neu-contact-item:active {
+  box-shadow: inset 4px 4px 10px #d1d1d1, inset -4px -4px 10px #ffffff;
+}
+
+.neu-contact-icon-wrap {
+  background: #f0f0f0;
+  box-shadow: 4px 4px 8px #d1d1d1, -4px -4px 8px #ffffff;
+}
+
+.neu-icon-box {
+  background: #f0f0f0;
+  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
+}
+
+.neu-contact-dark-btn {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 6px 6px 12px #c5c5c5, -4px -4px 10px #ffffff;
+  transition: all 0.3s;
+}
+
+.neu-contact-dark-btn:hover {
+  box-shadow: 8px 8px 16px #c0c0c0, -4px -4px 12px #ffffff;
+}
+
+.neu-contact-dark-btn:active {
+  box-shadow: inset 4px 4px 10px rgba(0,0,0,0.3), inset -4px -4px 10px rgba(255,255,255,0.05);
+}
+
+.neu-contact-light-btn {
+  background: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
+  transition: all 0.3s;
+}
+
+.neu-contact-light-btn:hover {
+  box-shadow: 8px 8px 16px #cacaca, -8px -8px 16px #ffffff;
+}
+
+.neu-contact-light-btn:active {
+  box-shadow: inset 4px 4px 10px #d1d1d1, inset -4px -4px 10px #ffffff;
+}
+
+.neu-contact-footer {
+  background: #ebebeb;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: inset 0 4px 8px #d1d1d1;
+}
