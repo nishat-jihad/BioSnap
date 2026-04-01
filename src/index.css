@@ -1,865 +1,149 @@
-@import "tailwindcss";
+import React, { useState } from 'react';
+import { User } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { UserProfile, LinkItem } from '../types';
+import { ExternalLink, Pin } from 'lucide-react';
 
-@theme {
-  --color-zinc-950: #09090b;
-  --color-brand-primary: #6366f1;
-  --color-brand-secondary: #ec4899;
-  --color-brand-accent: #f59e0b;
+interface LinkRowProps {
+  link: LinkItem;
+  user: User;
+  profile: UserProfile;
 }
 
-@variant dark (&:where(.dark, .dark *));
-
-@layer base {
-  body {
-    @apply transition-colors duration-500;
+function getFaviconUrl(url: string): string {
+  try {
+    const domain = new URL(url).hostname;
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+  } catch {
+    return '';
   }
 }
 
-/* ✅ Dotted background */
-.mesh-gradient {
-  background-color: #f8fafc;
-  background-image:
-    radial-gradient(circle, rgba(99, 102, 241, 0.22) 1px, transparent 1px),
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.06) 0, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.06) 0, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.06) 0, transparent 50%);
-  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
-}
-
-.dark .mesh-gradient {
-  background-color: #09090b;
-  background-image:
-    radial-gradient(circle, rgba(99, 102, 241, 0.18) 1px, transparent 1px),
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.12) 0, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.12) 0, transparent 50%);
-  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
-}
-
-.glass-card {
-  @apply bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-white/20 dark:border-zinc-800/50;
-}
-
-/* ✅ Back to Top Button */
-.back-to-top-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: linear-gradient(rgb(227, 203, 255), rgba(252, 235, 252, 1));
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253);
-  cursor: pointer;
-  transition-duration: 0.3s;
-  overflow: hidden;
-  position: relative;
-}
-
-.back-to-top-btn .svgIcon {
-  width: 12px;
-  transition-duration: 0.3s;
-}
-
-.back-to-top-btn .svgIcon path {
-  fill: #000000;
-}
-
-.back-to-top-btn:hover {
-  width: 140px;
-  border-radius: 50px;
-  transition-duration: 0.3s;
-  background-color: #7a18e5;
-  align-items: center;
-}
-
-.back-to-top-btn:hover .svgIcon {
-  transition-duration: 0.3s;
-  transform: translateY(-200%);
-}
-
-.back-to-top-btn::before {
-  position: absolute;
-  bottom: -20px;
-  content: "Back to Top";
-  color: #000000;
-  font-size: 0px;
-  white-space: nowrap;
-}
-
-.back-to-top-btn:hover::before {
-  font-size: 13px;
-  color: white;
-  opacity: 1;
-  bottom: unset;
-  transition-duration: 0.3s;
-}
-
-/* ✅ Search Input (neumorphism) */
-.search-input {
-  max-width: 100%;
-  width: 100%;
-  border: none;
-  outline: none;
-  background: none;
-  font-size: 15px;
-  color: #555;
-  padding: 13px 16px 13px 40px;
-  box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #ffffff;
-  border-radius: 25px;
-  transition: all 0.3s ease;
-}
-
-.search-input::placeholder {
-  color: #888;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus::placeholder {
-  color: #bbb;
-}
-
-/* ✅ Neumorphic button base (Contact, Logout, Home, Cancel) */
-.neu-btn {
-  color: #090909;
-  padding: 0.6em 1.4em;
-  font-size: 14px;
-  border-radius: 0.5em;
-  background: #e8e8e8;
-  cursor: pointer;
-  border: 1px solid #e8e8e8;
-  transition: all 0.3s;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.neu-btn:active {
-  color: #666;
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
-}
-
-/* ✅ New Playlist button */
-.playlist-btn {
-  color: #090909;
-  padding: 0.6em 1.4em;
-  font-size: 14px;
-  border-radius: 0.5em;
-  background: #e8e8e8;
-  cursor: pointer;
-  border: 1px solid #e8e8e8;
-  transition: all 0.3s;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.playlist-btn:hover {
-  border: 1px solid white;
-}
-
-.playlist-btn:active {
-  box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
-}
-
-/* ✅ Add URL neumorphic button */
-.add-url-btn {
-  color: #090909;
-  background: #e8e8e8;
-  cursor: pointer;
-  border: 1px solid #e8e8e8;
-  transition: all 0.3s;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border-radius: 1rem;
-}
-
-.add-url-btn:active {
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
-}
-
-.add-url-btn.active {
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
-  color: #555;
-}
-
-/* ✅ Neumorphic input (for playlist name, add url fields) */
-.neu-input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: none;
-  font-size: 15px;
-  color: #555;
-  padding: 13px 16px;
-  box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #ffffff;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-}
-
-.neu-input::placeholder {
-  color: #888;
-}
-
-/* ✅ Neumorphic link card */
-.neu-card {
-  background: #f0f0f0;
-  border-radius: 1rem;
-  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
-  border: none;
-  transition: all 0.3s;
-}
-
-.neu-card:hover {
-  box-shadow: 8px 8px 16px #c8c8c8, -8px -8px 16px #ffffff;
-}
-
-/* ✅ Dark/Light Toggle */
-.toggle-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  border-radius: .5em;
-  padding: .125em;
-  background-image: linear-gradient(to bottom, #d5d5d5, #e8e8e8);
-  box-shadow: 0 1px 1px rgb(255 255 255 / .6);
-  font-size: 1.2em;
-}
-
-.toggle-checkbox {
-  appearance: none;
-  position: absolute;
-  z-index: 1;
-  border-radius: inherit;
-  width: 100%;
-  height: 100%;
-  font: inherit;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.toggle-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-  border-radius: .375em;
-  width: 3em;
-  height: 1.5em;
-  background-color: #e8e8e8;
-  box-shadow: inset 0 0 .0625em .125em rgb(255 255 255 / .2), inset 0 .0625em .125em rgb(0 0 0 / .4);
-  transition: background-color .4s linear;
-}
-
-.toggle-checkbox:checked + .toggle-container {
-  background-color: #f3b519;
-}
-
-.toggle-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  left: .0625em;
-  border-radius: .3125em;
-  width: 1.375em;
-  height: 1.375em;
-  background-color: #e8e8e8;
-  box-shadow: inset 0 -.0625em .0625em .125em rgb(0 0 0 / .1), inset 0 -.125em .0625em rgb(0 0 0 / .2), inset 0 .1875em .0625em rgb(255 255 255 / .3), 0 .125em .125em rgb(0 0 0 / .5);
-  transition: left .4s;
-}
-
-.toggle-checkbox:checked + .toggle-container > .toggle-button {
-  left: 1.5625em;
-}
-
-.toggle-button-circles-container {
-  display: grid;
-  grid-template-columns: repeat(3, min-content);
-  gap: .125em;
-  position: absolute;
-  margin: 0 auto;
-}
-
-.toggle-button-circle {
-  border-radius: 50%;
-  width: .125em;
-  height: .125em;
-  background-image: radial-gradient(circle at 50% 0, #f5f5f5, #c4c4c4);
-}
-
-/* ✅ Neumorphic Google Button (Landing page) */
-.neu-google-btn {
-  background: #e8e8e8;
-  border: 1px solid #e8e8e8;
-  border-radius: 1.5rem;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
-  cursor: pointer;
-  transition: all 0.3s;
-  color: #090909;
-}
-
-.neu-google-btn:hover {
-  box-shadow: 8px 8px 16px #c0c0c0, -8px -8px 16px #ffffff;
-}
-
-.neu-google-btn:active {
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
-}
-
-/* ✅ Neumorphic Search-style Input (Landing page email & password) */
-.neu-search-input {
-  max-width: 100%;
-  width: 100%;
-  border: none;
-  outline: none;
-  background: #f0f0f0;
-  font-size: 15px;
-  color: #555;
-  padding: 16px 16px 16px 48px;
-  box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #ffffff;
-  border-radius: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.neu-search-input::placeholder {
-  color: #888;
-  transition: all 0.3s ease;
-}
-
-.neu-search-input:focus::placeholder {
-  color: #bbb;
-}
-
-/* ✅ Neumorphic Primary Button (Get Started) */
-.neu-primary-btn {
-  background: linear-gradient(145deg, #7577f3, #5456d4);
-  color: white;
-  border: none;
-  cursor: pointer;
-  box-shadow: 6px 6px 14px #a8a9f0, -4px -4px 10px #ffffff;
-  transition: all 0.3s;
-}
-
-.neu-primary-btn:hover {
-  box-shadow: 8px 8px 18px #a0a1ec, -4px -4px 12px #ffffff;
-  transform: scale(1.01);
-}
-
-.neu-primary-btn:active {
-  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.2), inset -4px -4px 10px rgba(255, 255, 255, 0.15);
-  transform: scale(0.99);
-}
-
-/* ✅ Neumorphic Contact Page */
-.neu-contact-card {
-  background: #f0f0f0;
-  border-radius: 2.5rem;
-  box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
-}
-
-.neu-contact-item {
-  background: #f0f0f0;
-  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
-  border: none;
-  cursor: pointer;
-}
-
-.neu-contact-item:hover {
-  box-shadow: 8px 8px 16px #cacaca, -8px -8px 16px #ffffff;
-}
-
-.neu-contact-item:active {
-  box-shadow: inset 4px 4px 10px #d1d1d1, inset -4px -4px 10px #ffffff;
-}
-
-.neu-contact-icon-wrap {
-  background: #f0f0f0;
-  box-shadow: 4px 4px 8px #d1d1d1, -4px -4px 8px #ffffff;
-}
-
-.neu-icon-box {
-  background: #f0f0f0;
-  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
-}
-
-.neu-contact-dark-btn {
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  color: white;
-  border: none;
-  cursor: pointer;
-  box-shadow: 6px 6px 12px #c5c5c5, -4px -4px 10px #ffffff;
-  transition: all 0.3s;
-}
-
-.neu-contact-dark-btn:hover {
-  box-shadow: 8px 8px 16px #c0c0c0, -4px -4px 12px #ffffff;
-}
-
-.neu-contact-dark-btn:active {
-  box-shadow: inset 4px 4px 10px rgba(0,0,0,0.3), inset -4px -4px 10px rgba(255,255,255,0.05);
-}
-
-.neu-contact-light-btn {
-  background: #f0f0f0;
-  border: none;
-  cursor: pointer;
-  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
-  transition: all 0.3s;
-}
-
-.neu-contact-light-btn:hover {
-  box-shadow: 8px 8px 16px #cacaca, -8px -8px 16px #ffffff;
-}
-
-.neu-contact-light-btn:active {
-  box-shadow: inset 4px 4px 10px #d1d1d1, inset -4px -4px 10px #ffffff;
-}
-
-.neu-contact-footer {
-  background: #ebebeb;
-  border-top: 1px solid #e0e0e0;
-  box-shadow: inset 0 4px 8px #d1d1d1;
-}
-
-/* ✅ Animated Delete Button */
-.delete-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: rgb(20, 20, 20);
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
-  cursor: pointer;
-  transition-duration: .3s;
-  overflow: hidden;
-  position: relative;
-}
-
-.delete-btn .delete-icon {
-  width: 12px;
-  transition-duration: .3s;
-}
-
-.delete-btn .delete-icon path {
-  fill: white;
-}
-
-.delete-btn:hover {
-  width: 110px;
-  border-radius: 50px;
-  transition-duration: .3s;
-  background-color: rgb(255, 69, 69);
-  align-items: center;
-}
-
-.delete-btn:hover .delete-icon {
-  width: 40px;
-  transition-duration: .3s;
-  transform: translateY(55%);
-}
-
-.delete-btn::before {
-  position: absolute;
-  top: -20px;
-  content: "Delete";
-  color: white;
-  transition-duration: .3s;
-  font-size: 2px;
-}
-
-.delete-btn:hover::before {
-  font-size: 13px;
-  opacity: 1;
-  transform: translateY(30px);
-  transition-duration: .3s;
-}
-
-/* ✅ Animated Delete (Trash) Button */
-.trash-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: rgb(20, 20, 20);
-  border: none;
-  font-weight: 600;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
-  cursor: pointer;
-  transition-duration: 0.3s;
-  overflow: hidden;
-  position: relative;
-  gap: 2px;
-  padding: 0;
-}
-
-.trash-btn .trash-icon {
-  width: 11px;
-  transition-duration: 0.3s;
-}
-
-.trash-btn .trash-icon path {
-  fill: white;
-}
-
-.trash-btn:hover {
-  transition-duration: 0.3s;
-  background-color: rgb(255, 69, 69);
-  align-items: center;
-  gap: 0;
-}
-
-.trash-btn .bin-top {
-  transform-origin: bottom right;
-}
-
-.trash-btn:hover .bin-top {
-  transition-duration: 0.5s;
-  transform: rotate(160deg);
-}
-
-/* ✅ Neumorphic Playlist Action Buttons (+ and ...) */
-.neu-playlist-action-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: #e8e8e8;
-  border: 1px solid #e8e8e8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 5px 5px 10px #c5c5c5, -5px -5px 10px #ffffff;
-}
-
-.neu-playlist-action-btn:hover {
-  box-shadow: 6px 6px 12px #c0c0c0, -6px -6px 12px #ffffff;
-}
-
-.neu-playlist-action-btn:active {
-  box-shadow: inset 4px 4px 8px #c5c5c5, inset -4px -4px 8px #ffffff;
-}
-
-/* ✅ Animated Copy Button (Neumorphic) */
-.copy-btn {
-  background: #e8e8e8;
-  width: 90px;
-  height: 32px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 11px;
-  cursor: pointer;
-  overflow: hidden;
-  transition-duration: 700ms;
-  position: relative;
-  box-shadow: 5px 5px 10px #c5c5c5, -5px -5px 10px #ffffff;
-}
-
-.copy-btn span:first-child {
-  color: #6366f1;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-}
-
-.copy-btn span:last-child {
-  position: absolute;
-  color: #ffffff;
-  opacity: 0;
-  transform: translateY(100%) translateX(-50%);
-  height: 14px;
-  line-height: 13px;
-  white-space: nowrap;
-}
-
-.copy-btn.copied {
-  background: #6366f1;
-  width: 90px;
-  height: 32px;
-  box-shadow: inset 4px 4px 8px #4547c4, inset -4px -4px 8px #8183ff;
-  transition-delay: 100ms;
-  transition-duration: 500ms;
-}
-
-.copy-btn.copied span:first-child {
-  color: #c7c8fb;
-  transform: translateX(-50%) translateY(-150%);
-  opacity: 0;
-  transition-duration: 500ms;
-}
-
-.copy-btn.copied span:last-child {
-  transform: translateX(-50%) translateY(-50%);
-  opacity: 1;
-  transition-delay: 300ms;
-  transition-duration: 500ms;
-  color: #ffffff;
-}
-
-/* ✅ Neumorphic Inline Form Inputs (Playlist add form) */
-.neu-inline-input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: #f0f0f0;
-  font-size: 14px;
-  color: #555;
-  padding: 12px 18px;
-  box-shadow: inset 6px 6px 8px #cbced1, inset -6px -6px 8px #ffffff;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-  display: block;
-}
-
-.neu-inline-input::placeholder {
-  color: #aaa;
-}
-
-/* ✅ Neumorphic Cancel button (inline form) */
-.neu-inline-cancel-btn {
-  padding: 8px 16px;
-  border-radius: 10px;
-  background: #e8e8e8;
-  border: 1px solid #e8e8e8;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #888;
-  cursor: pointer;
-  box-shadow: 4px 4px 8px #c5c5c5, -4px -4px 8px #ffffff;
-  transition: all 0.3s;
-}
-
-.neu-inline-cancel-btn:hover {
-  color: #555;
-  box-shadow: 5px 5px 10px #c0c0c0, -5px -5px 10px #ffffff;
-}
-
-.neu-inline-cancel-btn:active {
-  box-shadow: inset 3px 3px 6px #c5c5c5, inset -3px -3px 6px #ffffff;
-}
-
-/* ✅ Neumorphic Add button (inline form) */
-.neu-inline-add-btn {
-  padding: 8px 20px;
-  border-radius: 10px;
-  background: linear-gradient(145deg, #7577f3, #5456d4);
-  border: none;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: white;
-  cursor: pointer;
-  box-shadow: 4px 4px 10px #a8a9f0, -3px -3px 8px #ffffff;
-  transition: all 0.3s;
-}
-
-.neu-inline-add-btn:hover {
-  box-shadow: 5px 5px 12px #a0a1ec, -3px -3px 10px #ffffff;
-}
-
-.neu-inline-add-btn:active {
-  box-shadow: inset 3px 3px 8px rgba(0,0,0,0.2), inset -3px -3px 6px rgba(255,255,255,0.1);
-}
-
-/* ✅ Neumorphic Footer Buttons (dark background) */
-.neu-footer-btn {
-  padding: 8px 18px;
-  border-radius: 10px;
-  background: #2a2a2a;
-  border: none;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #a1a1aa;
-  cursor: pointer;
-  box-shadow: 4px 4px 10px #111111, -4px -4px 10px #3a3a3a;
-  transition: all 0.3s;
-}
-
-.neu-footer-btn:hover {
-  color: #ffffff;
-  box-shadow: 5px 5px 12px #0d0d0d, -5px -5px 12px #404040;
-}
-
-.neu-footer-btn:active {
-  box-shadow: inset 3px 3px 8px #111111, inset -3px -3px 8px #3a3a3a;
-}
-
-/* ✅ Fix Copy Button width so text shows fully */
-.copy-btn {
-  width: 105px !important;
-}
-
-/* ✅ Neumorphic Blue Pin Button */
-.neu-pin-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #e8e8e8;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #a0a0a0;
-  box-shadow: 5px 5px 10px #c5c5c5, -5px -5px 10px #ffffff;
-  transition: all 0.3s;
-}
-
-.neu-pin-btn:hover {
-  color: #6366f1;
-  box-shadow: 6px 6px 12px #c0c0c0, -6px -6px 12px #ffffff;
-}
-
-/* ✅ Pinned state — blue neumorphism */
-.neu-pin-btn--active {
-  background: linear-gradient(145deg, #7577f3, #5456d4);
-  color: white;
-  box-shadow: 4px 4px 10px #a8a9f0, -3px -3px 8px #ffffff;
-}
-
-.neu-pin-btn--active:hover {
-  box-shadow: 5px 5px 12px #9fa0ec, -3px -3px 10px #ffffff;
-  color: white;
-}
-
-/* ✅ Edit CTA Button */
-.cta {
-  position: relative;
-  padding: 12px 18px;
-  transition: all 0.2s ease;
-  border: none;
-  background: none;
-  cursor: pointer;
-  flex-shrink: 0;
-  margin-top: 6px;
-}
-
-.cta:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  border-radius: 50px;
-  background: #b1dae7;
-  width: 45px;
-  height: 45px;
-  transition: all 0.3s ease;
-}
-
-.cta span {
-  position: relative;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #234567;
-}
-
-.cta svg {
-  position: relative;
-  top: 0;
-  margin-left: 10px;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke: #234567;
-  stroke-width: 2;
-  transform: translateX(-5px);
-  transition: all 0.3s ease;
-}
-
-.cta:hover:before {
-  width: 100%;
-  background: #b1dae7;
-}
-
-.cta:hover svg {
-  transform: translateX(0);
-}
-
-.cta:active {
-  transform: scale(0.95);
-}
-
-/* ✅ Pagination */
-.pagination {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  flex-wrap: wrap;
-}
-
-.page-item .page-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 38px;
-  height: 38px;
-  padding: 0 12px;
-  border-radius: 10px;
-  background: #e8e8e8;
-  border: 1px solid #e8e8e8;
-  color: #444;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 4px 4px 8px #c5c5c5, -4px -4px 8px #ffffff;
-  transition: all 0.2s ease;
-}
-
-.page-item .page-link:hover {
-  box-shadow: 5px 5px 10px #c0c0c0, -5px -5px 10px #ffffff;
-  color: #6366f1;
-}
-
-.page-item.active .page-link {
-  background: linear-gradient(145deg, #7577f3, #5456d4);
-  color: white;
-  border-color: transparent;
-  box-shadow: 4px 4px 10px #a8a9f0, -3px -3px 8px #ffffff;
-}
-
-.page-item.disabled .page-link {
-  opacity: 0.4;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.page-item.active .page-link:hover {
-  color: white;
+export default function LinkRow({ link, user, profile }: LinkRowProps) {
+  const [copied, setCopied] = useState(false);
+  const [faviconError, setFaviconError] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({ title: link.title, subtitle: link.subtitle || '', url: link.url });
+
+  const togglePin = async () => {
+    const updatedLinks = profile.links.map(l => l.id === link.id ? { ...l, pinned: !l.pinned } : l);
+    await updateDoc(doc(db, 'users', user.uid), { links: updatedLinks });
+  };
+
+  const changeColor = async (color: string) => {
+    const updatedLinks = profile.links.map(l => l.id === link.id ? { ...l, color } : l);
+    await updateDoc(doc(db, 'users', user.uid), { links: updatedLinks });
+  };
+
+  const deleteLink = async () => {
+    const updatedLinks = profile.links.filter(l => l.id !== link.id);
+    await updateDoc(doc(db, 'users', user.uid), { links: updatedLinks });
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(link.url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
+
+  const handleEditSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editData.url.trim()) return;
+    const updatedLinks = profile.links.map(l => l.id === link.id ? { ...l, ...editData } : l);
+    await updateDoc(doc(db, 'users', user.uid), { links: updatedLinks });
+    setIsEditing(false);
+  };
+
+  const faviconUrl = getFaviconUrl(link.url);
+
+  return (
+    <div className="flex items-start gap-3">
+      <button onClick={() => setIsEditing(!isEditing)} className="editBtn" title="Edit link">
+        <svg height="1em" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path></svg>
+      </button>
+
+      <div className="flex-1 min-w-0 space-y-2">
+        {isEditing && (
+          <form onSubmit={handleEditSave} className="p-4 rounded-2xl space-y-2"
+            style={{ background: '#f0f0f0', boxShadow: '6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff' }}>
+            <p className="text-xs font-black text-indigo-500 uppercase tracking-widest mb-2">Editing link</p>
+            <input type="text" placeholder="Title" value={editData.title}
+              onChange={e => setEditData({ ...editData, title: e.target.value })} className="neu-input" required autoFocus />
+            <input type="text" placeholder="Subtitle (optional)" value={editData.subtitle}
+              onChange={e => setEditData({ ...editData, subtitle: e.target.value })} className="neu-input" />
+            <input type="url" placeholder="https://..." value={editData.url}
+              onChange={e => setEditData({ ...editData, url: e.target.value })} className="neu-input" required />
+            <div className="flex justify-end gap-2 pt-1">
+              <button type="button" onClick={() => setIsEditing(false)} className="neu-inline-cancel-btn">CANCEL</button>
+              <button type="submit" className="neu-inline-add-btn">SAVE</button>
+            </div>
+          </form>
+        )}
+
+        <div className="neu-card p-4">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="relative w-8 h-8">
+                {faviconUrl && !faviconError ? (
+                  <img src={faviconUrl} alt="" onError={() => setFaviconError(true)}
+                    className="w-8 h-8 rounded-lg object-contain bg-zinc-100 p-1" />
+                ) : (
+                  <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: link.color }} />
+                )}
+                <input type="color" value={link.color} onChange={(e) => changeColor(e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" title="Change color" />
+              </div>
+            </div>
+
+            <div className="flex-grow min-w-0">
+              <div className="flex items-center gap-2">
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className="group/link flex items-center gap-2">
+                  <h3 className="font-bold text-zinc-900 truncate hover:text-indigo-600 transition-colors">{link.title}</h3>
+                  <ExternalLink size={14} className="text-zinc-300 group-hover/link:text-indigo-500 transition-colors" />
+                </a>
+                {link.pinned && <Pin size={12} className="text-orange-500 fill-orange-500" />}
+              </div>
+              <p className="text-sm text-zinc-500 truncate">{link.subtitle}</p>
+              <p className="text-[10px] text-zinc-400 font-medium mt-1">↑ Click title to visit link</p>
+            </div>
+
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button onClick={handleCopy} className={`copy-btn ${copied ? 'copied' : ''}`} title="Copy link">
+                <span>
+                  <svg width="11" height="11" fill="#6366f1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 467 512.22">
+                    <path fillRule="nonzero" d="M131.07 372.11c.37 1 .57 2.08.57 3.2 0 1.13-.2 2.21-.57 3.21v75.91c0 10.74 4.41 20.53 11.5 27.62s16.87 11.49 27.62 11.49h239.02c10.75 0 20.53-4.4 27.62-11.49s11.49-16.88 11.49-27.62V152.42c0-10.55-4.21-20.15-11.02-27.18l-.47-.43c-7.09-7.09-16.87-11.5-27.62-11.5H170.19c-10.75 0-20.53 4.41-27.62 11.5s-11.5 16.87-11.5 27.61v219.69zm-18.67 12.54H57.23c-15.82 0-30.1-6.58-40.45-17.11C6.41 356.97 0 342.4 0 326.52V57.79c0-15.86 6.5-30.3 16.97-40.78l.04-.04C27.51 6.49 41.94 0 57.79 0h243.63c15.87 0 30.3 6.51 40.77 16.98l.03.03c10.48 10.48 16.99 24.93 16.99 40.78v36.85h50c15.9 0 30.36 6.5 40.82 16.96l.54.58c10.15 10.44 16.43 24.66 16.43 40.24v302.01c0 15.9-6.5 30.36-16.96 40.82-10.47 10.47-24.93 16.97-40.83 16.97H170.19c-15.9 0-30.35-6.5-40.82-16.97-10.47-10.46-16.97-24.92-16.97-40.82v-69.78zM340.54 94.64V57.79c0-10.74-4.41-20.53-11.5-27.63-7.09-7.08-16.86-11.48-27.62-11.48H57.79c-10.78 0-20.56 4.38-27.62 11.45l-.04.04c-7.06 7.06-11.45 16.84-11.45 27.62v268.73c0 10.86 4.34 20.79 11.38 27.97 6.95 7.07 16.54 11.49 27.17 11.49h55.17V152.42c0-15.9 6.5-30.35 16.97-40.82 10.47-10.47 24.92-16.96 40.82-16.96h170.35z"></path>
+                  </svg>
+                  Copy link
+                </span>
+                <span>Copied ✓</span>
+              </button>
+
+              <button onClick={togglePin} className={`neu-pin-btn ${link.pinned ? 'neu-pin-btn--active' : ''}`}
+                title={link.pinned ? 'Unpin' : 'Pin to top'}>
+                <Pin size={16} />
+              </button>
+
+              <button onClick={deleteLink} className="trash-btn" title="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" className="trash-icon bin-top">
+                  <g clipPath="url(#clip0_35_24)">
+                    <path fill="black" d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"></path>
+                  </g>
+                  <defs><clipPath id="clip0_35_24"><rect fill="white" height="14" width="69"></rect></clipPath></defs>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 57" className="trash-icon bin-bottom">
+                  <g clipPath="url(#clip0_35_22)">
+                    <path fill="black" d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"></path>
+                  </g>
+                  <defs><clipPath id="clip0_35_22"><rect fill="white" height="57" width="69"></rect></clipPath></defs>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
