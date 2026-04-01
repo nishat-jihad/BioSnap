@@ -20,7 +20,6 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
   const [isAdding, setIsAdding] = useState(false);
   const [inlineLink, setInlineLink] = useState({ title: '', url: '' });
 
-  // প্লেলিস্টের ভেতর সরাসরি লিংক সেভ করার ফাংশন
   const handleInlineAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inlineLink.url) return;
@@ -31,7 +30,7 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
       url: inlineLink.url,
       color: '#18181b',
       pinned: false,
-      playlistId: playlist.id // এই প্লেলিস্টের সাথে লিংকটা কানেক্ট হচ্ছে
+      playlistId: playlist.id
     };
 
     const userDocRef = doc(db, 'users', user.uid);
@@ -73,22 +72,25 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
           </div>
         </button>
 
-        <div className="relative ml-2 flex gap-1">
-          {/* প্লেলিস্টের ভেতর লিংক অ্যাড করার বাটন */}
+        <div className="relative ml-2 flex gap-2">
+          {/* ✅ Neumorphic + Button */}
           <button
             onClick={() => setIsAdding(!isAdding)}
-            className="p-2.5 text-zinc-400 hover:text-indigo-500 hover:bg-white/50 dark:hover:bg-zinc-800/50 rounded-xl transition-all"
+            className="neu-playlist-action-btn"
+            title="Add link to playlist"
           >
-            <Plus size={20} />
+            <Plus size={18} className="text-indigo-500" />
           </button>
-          
+
+          {/* ✅ Neumorphic ··· Button */}
           <button
             onClick={() => setShowOptions(!showOptions)}
-            className="p-2.5 text-zinc-400 hover:text-indigo-500 hover:bg-white/50 dark:hover:bg-zinc-800/50 rounded-xl transition-all"
+            className="neu-playlist-action-btn"
+            title="Options"
           >
-            <MoreHorizontal size={20} />
+            <MoreHorizontal size={18} className="text-zinc-500" />
           </button>
-          
+
           <AnimatePresence>
             {showOptions && (
               <motion.div
@@ -111,24 +113,23 @@ export default function PlaylistRow({ playlist, links, user, profile }: Playlist
       </div>
 
       <AnimatePresence>
-        {/* প্লেলিস্টের ভেতরে ছোট অ্যাড ফর্ম */}
         {isAdding && (
-          <motion.form 
+          <motion.form
             initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             onSubmit={handleInlineAdd}
             className="mx-4 p-4 bg-white/30 dark:bg-zinc-800/30 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-700 space-y-3"
           >
-            <input 
+            <input
               type="text" placeholder="Title..." value={inlineLink.title}
               onChange={e => setInlineLink({...inlineLink, title: e.target.value})}
               className="w-full p-2 bg-transparent border-b border-zinc-200 dark:border-zinc-700 outline-none text-sm"
-              required 
+              required
             />
-            <input 
+            <input
               type="url" placeholder="https://..." value={inlineLink.url}
               onChange={e => setInlineLink({...inlineLink, url: e.target.value})}
               className="w-full p-2 bg-transparent border-b border-zinc-200 dark:border-zinc-700 outline-none text-sm"
-              required 
+              required
             />
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setIsAdding(false)} className="text-[10px] font-bold uppercase text-zinc-400">Cancel</button>
