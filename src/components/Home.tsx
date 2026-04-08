@@ -65,7 +65,7 @@ export default function Home({ onGetStarted }: HomeProps) {
     <div className="w-full">
 
       {/* HERO */}
-      <section className="min-h-[88vh] flex flex-col items-center justify-center text-center px-4 py-12 sm:py-20 relative overflow-hidden">
+      <section className="min-h-[88vh] flex flex-col items-center justify-center text-center px-4 py-20 relative overflow-hidden">
 
         <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 rounded-full bg-brand-primary/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-brand-secondary/10 blur-3xl" />
@@ -234,9 +234,9 @@ export default function Home({ onGetStarted }: HomeProps) {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="glass-card rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 shadow-2xl shadow-brand-primary/10"
+            className="glass-card rounded-[2.5rem] p-12 shadow-2xl shadow-brand-primary/10"
           >
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-zinc-900 dark:text-zinc-100 leading-tight mb-4">
+            <h2 className="text-4xl sm:text-5xl font-black tracking-tighter text-zinc-900 dark:text-zinc-100 leading-tight mb-4">
               Ready to boost your productivity and save time with full free{' '}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">BioSnap?</span>
             </h2>
